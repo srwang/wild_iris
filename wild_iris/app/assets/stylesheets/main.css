@@ -1,0 +1,16 @@
+body {
+	margin: 0px 100px;
+}
+
+#poem-modal-container {
+	display: none;
+	margin: 0px auto;
+}
+
+#poem-modal {
+	height: 500px;
+}
+
+/*header {
+	margin: 0px auto;
+}*/

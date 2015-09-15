@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  fed_current: 1
+  fed_cap: 1
+  poem: MyString
+  image: MyString
+  unlocked: false
+
+two:
+  name: MyString
+  fed_current: 1
+  fed_cap: 1
+  poem: MyString
+  image: MyString
+  unlocked: false
