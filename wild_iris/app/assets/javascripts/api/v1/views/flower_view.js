@@ -3,12 +3,20 @@ $(document).ready(function(){
 	App.Views.FlowerView = Backbone.View.extend({
 		template: Handlebars.compile($('#flower-template').html()),
 		'events': {
-			'click #play-button': 'play',
-			'click #read-button': 'read'
+			'click .play-button': 'play',
+			'click .read-button': 'read',
+			'click .close-modal': 'closeModal'
 		},
 		render: function(){
 			this.$el.html(this.template({flower: this.model.toJSON()}));
 			return this
+		},
+		read: function(){
+			console.log('clicked')
+			this.$('.poem-modal').toggle();
+		},
+		closeModal: function(){
+			this.$('.poem-modal').hide();
 		}
 	})
 
