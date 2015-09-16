@@ -3,20 +3,37 @@ $(document).ready(function(){
 	App.Views.FlowerView = Backbone.View.extend({
 		template: Handlebars.compile($('#flower-template').html()),
 		'events': {
-			'click .play-button': 'play',
 			'click .read-button': 'read',
-			'click .close-modal': 'closeModal'
+			'click .close-modal': 'closeModal',
+			'click .feed-button': 'decreaseHunger'
 		},
 		render: function(){
 			this.$el.html(this.template({flower: this.model.toJSON()}));
 			return this
 		},
 		read: function(){
-			console.log('clicked')
-			this.$('.poem-modal').toggle();
+			if (this.model.attributes.unlocked === true) {
+				this.$('.poem-modal').toggle();
+				this.$('.modal-overlay').toggle();				
+			} 
 		},
 		closeModal: function(){
-			this.$('.poem-modal').hide();
+			this.$('.poem-modal').toggle();
+			this.$('.modal-overlay').toggle();
+		},
+		decreaseHunger: function(){
+			if (this.model.attributes.fed_cap >= 25) {
+				newHunger = this.model.attributes.fed_cap - 25;
+				console.log(newHunger)
+				this.model.save({fed_cap: newHunger})			
+			} else {
+				newHunger = 0;
+				this.model.save({fed_cap: newHunger})	
+			}
+			if (this.model.attributes.fed_cap === 0) {
+				console.log("it's zero")
+				this.model.save({unlocked: true});
+			}
 		}
 	})
 
@@ -59,16 +76,6 @@ $(document).ready(function(){
 			"flowers/:id/game" : "showGame",
 			"flowers/:id/poem" : "showPoem"
 		},
-
-		// showPoem: function(id){
-		// 	var flower = new App.Models.Flower({id: id})
-  //   		flower.fetch({
-	 //      		success: function(object) {
-	 //      			$('#poem-modal-container').append('<p>' + object.attributes.poem + '</p>');
-	 //        		// var flowerView = $("#grocery-list").append(new App.Views.GroceryView({model: res}).render().$el);
-	 //      		}
-  //   		});
-		// }
 	})
 
 	var flowerRouter = new App.Routers.FlowerRouter();

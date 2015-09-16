@@ -1,20 +1,46 @@
-body {
-	margin: 0px 100px;
+html, body{
+  min-height: 100%;
 }
 
-/*#poem-modal-container {
+body{
+  position: relative;
+}
+
+.rainwater-container {
+	float: right;
+}
+
+.flower-container {
+	float: left;
+	margin: 10px;
+}
+
+.modal-overlay{
 	display: none;
-	margin: 0px auto;
-}*/
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	background-color: rgba(0,0,0,0.5); 
+}
 
 .poem-modal {
 	display: none;
-	height: 500px;
+	position: fixed;
+	height: 550px;
+	top: 10%;
+	left: 32%;
+	margin: 0px auto;
 	white-space: pre-wrap;
+	padding: 20px;
+	border-radius: 2%;
+	background-color: lightgray;
+	overflow: scroll;
+	z-index: 12;
 }
 
-
-
-/*header {
-	margin: 0px auto;
-}*/
+.close-game-modal, .close-modal {
+	float: right;
+}

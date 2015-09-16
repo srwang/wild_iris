@@ -14,6 +14,10 @@
 		<a href="">About "The Wild Iris"</a>
 		<a href="">Play Game</a>
 	</nav>
+
+	<div id='rainwater-container'>
+	</div>
+
 	<div id="grass-flowers-container">
 <!-- 		generate flower cards to be displayed on "grass" -->
 	</div>
@@ -22,25 +26,21 @@
 <!-- 		generate flower cards to be displayed "underground" -->
 	</div>
 
-	<div id="modal-overlay">
-	</div>
-
 	<script type="text/x-handlebars-template" id="flower-template">
 		<div class="flower-container" id="flower-{{flower.id}}">
 			<div class="image">
-				<img src="{{flower.image}}">
+				{{#if flower.unlocked}}
+					<img class="read-button" src="{{flower.image}}">
+				{{else}}
+					<img class="feed-button" src="{{flower.image}}">
+					<p>Hungry for {{flower.fed_cap}} Drops</p>
+				{{/if}}
 			</div>
 			<div class="main-content">
 				<h3>{{flower.name}}</h3>
 			</div>
-			<div class="description"> 				
-				<p>add short blurb</p>
+			<div class="modal-overlay">
 			</div>
-			<div class="buttons">
-				<button class="play-button">Play</button>
-				<button class="read-button">Read</button>
-			</div>
-
 			<div class="pure-g">
 				<div class="pure-u-1-3 poem-modal" style="display: none">
 					<button class="close-modal">X</button>
@@ -48,6 +48,11 @@
 				</div>
 			</div>
 		</div>
+	</script>
+
+	<script type="text/x-handlebars-template" id="rainwater-template">
+		<h4>Rainwater: {{rainwater.total_amount}} Drops </h4>
+		<img id="tree" src="http://www.kintera.org/atf/cf/%7B124054d6-3e53-4efa-8f26-c97fd881dd86%7D/GIVING%20TREE%20FOR%20WEBSITE.PNG">
 	</script>
 
 	<footer>
