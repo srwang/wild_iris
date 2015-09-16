@@ -3,7 +3,6 @@ class CreateFlowers < ActiveRecord::Migration
     create_table :flowers do |t|
       t.string :name
       t.string :poem_type
-      t.integer :fed_current
       t.integer :fed_cap
       t.string :poem
       t.string :image

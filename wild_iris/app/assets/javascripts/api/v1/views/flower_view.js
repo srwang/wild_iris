@@ -1,11 +1,13 @@
 $(document).ready(function(){
 
 	App.Views.FlowerView = Backbone.View.extend({
+		// var level = 1;
 		template: Handlebars.compile($('#flower-template').html()),
 		'events': {
 			'click .read-button': 'read',
 			'click .close-modal': 'closeModal',
-			'click .feed-button': 'decreaseHunger'
+			'click .feed-button': 'decreaseHunger',
+			'click .close-secrets-modal': 'closeSecretsModal'
 		},
 		render: function(){
 			this.$el.html(this.template({flower: this.model.toJSON()}));
@@ -22,19 +24,37 @@ $(document).ready(function(){
 			this.$('.modal-overlay').toggle();
 		},
 		decreaseHunger: function(){
-			if (this.model.attributes.fed_cap >= 25) {
-				newHunger = this.model.attributes.fed_cap - 25;
-				console.log(newHunger)
-				this.model.save({fed_cap: newHunger})			
-			} else {
-				newHunger = 0;
-				this.model.save({fed_cap: newHunger})	
-			}
-			if (this.model.attributes.fed_cap === 0) {
-				console.log("it's zero")
-				this.model.save({unlocked: true});
-			}
+			// if (level === 1 || level === 2) {
+				if (this.model.attributes.fed_cap >= 25) {
+					newHunger = this.model.attributes.fed_cap - 25;
+					var rain = new App.Models.Rainwater({id: 1});
+					console.log(rain)
+
+					debugger
+
+
+					console.log(newHunger)
+					this.model.save({fed_cap: newHunger})			
+				} else {
+					newHunger = 0;
+					this.model.save({fed_cap: newHunger})	
+				}
+				if (this.model.attributes.fed_cap === 0) {
+					console.log("it's zero")
+					this.model.save({unlocked: true});
+					level ++;
+				}		
+			// } else if (level === 3) {
+			// 	if (this.model.attributes.fed_cap >= 25) {
+			// 		newHunger = this.model.attributes.fed_cap -25;
+			// 		if (this.model.attributes.fed_cap >= 75) {
+			// 			$('secrets-game-modal').toggle();
+			// 			$('secrets-modal-overlay').toggle();
+			// 		}
+			// 	}
+			// }
 		}
+
 	})
 
 	App.Views.PurgatoryFlowersView = Backbone.View.extend({

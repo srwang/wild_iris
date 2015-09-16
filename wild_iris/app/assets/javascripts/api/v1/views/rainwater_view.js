@@ -13,7 +13,6 @@ $(document).ready(function(){
 		addWater: function(){
 			var newAmount = this.model.attributes.total_amount + 15;
 			this.model.save({total_amount: newAmount});
-			debugger
 		},
 		subtractWater: function(){
 			var newAmount = this.model.attributes.total_amount - 25;

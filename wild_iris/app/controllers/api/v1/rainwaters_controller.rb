@@ -18,6 +18,6 @@ class Api::V1::RainwatersController < ApplicationController
 	private
 
 	def rainwater_params
-		params.permit(:total_amount, :amount_collected)
+		params.permit(:total_amount)
 	end
 end

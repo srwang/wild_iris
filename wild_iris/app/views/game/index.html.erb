@@ -28,16 +28,16 @@
 
 	<script type="text/x-handlebars-template" id="flower-template">
 		<div class="flower-container" id="flower-{{flower.id}}">
+			<div class="main-content">
+				<h3>{{flower.name}}</h3>
+			</div>
 			<div class="image">
 				{{#if flower.unlocked}}
 					<img class="read-button" src="{{flower.image}}">
 				{{else}}
-					<img class="feed-button" src="{{flower.image}}">
 					<p>Hungry for {{flower.fed_cap}} Drops</p>
+					<img class="feed-button" src="{{flower.image}}">
 				{{/if}}
-			</div>
-			<div class="main-content">
-				<h3>{{flower.name}}</h3>
 			</div>
 			<div class="modal-overlay">
 			</div>
