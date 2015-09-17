@@ -15,7 +15,7 @@ body{
 	margin: 10px;
 }
 
-.modal-overlay{
+.secrets-modal-overlay, .modal-overlay{
 	display: none;
 	position: fixed;
 	top: 0;
@@ -26,7 +26,7 @@ body{
 	background-color: rgba(0,0,0,0.5); 
 }
 
-.poem-modal {
+.secrets-game-modal, .poem-modal {
 	display: none;
 	position: fixed;
 	height: 550px;
