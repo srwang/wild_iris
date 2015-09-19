@@ -26,10 +26,9 @@ $(document).ready(function(){
 			user.fetch({
 				success: function(res){ 
 					level = res.attributes.level
-					console.log(level)
 					if (level === 1) {
 						if (that.model.attributes.fed_cap >= 25) {
-							calcWaterDrops();
+							calcWaterDrops();								
 						}
 						if (that.model.attributes.fed_cap === 0) {
 							unlockFlower();
@@ -38,7 +37,6 @@ $(document).ready(function(){
 						if (that.model.attributes.fed_cap >= 125) {
 							calcWaterDrops();
 						} else if (that.model.attributes.fed_cap >= 100) {
-							console.log('trying to open modal')
 							calcWaterDrops();
 							that.openSecretsModal();
 						} else if (that.model.attributes.fed_cap >=25) {
@@ -51,16 +49,20 @@ $(document).ready(function(){
 					}
 
 					function calcWaterDrops (){
-						var newHunger = that.model.attributes.fed_cap - 25;
-						that.model.save({fed_cap: newHunger});
+						if (res.attributes.rainwater>=25) {
+							var newHunger = that.model.attributes.fed_cap - 25;
+							that.model.save({fed_cap: newHunger});
 
-				        var newRain = res.attributes.rainwater - 25;
-				        res.set({rainwater: newRain});
-				        res.save();
-				        res.trigger('change');
+					        var newRain = res.attributes.rainwater - 25;
+					        res.set({rainwater: newRain});
+					        res.save();
+					        res.trigger('change');
 
-				        var users = new App.Collections.Users();
-						var usersView = new App.Views.UsersView({collection: users});
+					        var users = new App.Collections.Users();
+							var usersView = new App.Views.UsersView({collection: users});							
+						} else {
+							alert("you don't have enough rainwater!")
+						}
 					}
 
 					function unlockFlower (){
@@ -76,7 +78,6 @@ $(document).ready(function(){
 		openSecretsModal: function(){
 			this.$('.secrets-game-modal').toggle();
 			this.$('.secrets-modal-overlay').toggle();
-			debugger
 		},
 		closeSecretsModal: function(){
 			this.$('.secrets-game-modal').toggle();
