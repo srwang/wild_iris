@@ -30,9 +30,9 @@ $(document).ready(function(){
         
       ctx.beginPath();
       ctx.arc(this.x, this.y, (Math.random()*this.maxRadius)/2, 0, 2 * Math.PI, true);
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = 'pink';
       ctx.fill();
-      ctx.strokeStyle = 'pink';
+      ctx.strokeStyle = 'white';
       ctx.stroke();
 
       if (this.velY >= 0) {
@@ -153,28 +153,14 @@ $(document).ready(function(){
         var inPlaceParticle = function () {
             this.x = event.pageX;
             this.y = event.pageY;
-            // this.velX = Math.random()*3 - Math.random()*3
-            // this.velY = Math.random()*3 - Math.random()*3 
 
             this.draw = function (){
-              // this.x += this.velX;
-              // this.y += this.velY;
               ctx.beginPath();
               ctx.arc(this.x, this.y, (Math.random()*10)/2, 0, 2 * Math.PI, true);
               ctx.fillStyle = 'lightblue';
               ctx.fill();
               ctx.strokeStyle = 'white';
               ctx.stroke();
-
-              // if (this.x <= canvas.width - 135){
-              //   this.velX = 1;
-              // } else if (this.x >= canvas.width - 65){
-              //   this.velX = -1
-              // } else if (this.y <= 60){
-              //   this.velY = 1;
-              // } else if (this.y >= 130) {
-              //   this.velY = -1
-              // }
             }
         }
         var newParticle = new inPlaceParticle();

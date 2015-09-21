@@ -15,101 +15,97 @@
 		<a href="">Play Game</a>
 	</nav>
 
-	<div id="secrets-box">
-	</div>
+	<div id="game-display">
 
-	<div id='rainwater-container'>
-	</div>
-
-	<div id="grass-flowers-container">
-<!-- 		generate flower cards to be displayed on "grass" -->
-	</div>
-
-	<div id="dirt-flowers-container">
-<!-- 		generate flower cards to be displayed "underground" -->
-	</div>
-
-	<footer>
-		<h2>Do you have all of the secret words? Type them in here...</h2>
-		<input id="secret-phrase" type="text">
-		<button id="submit-secret-phrase">Submit</button>
-	</footer>
-
-	<script type="text/x-handlebars-template" id="secrets-box-template">
-		<p>{{flower.secret}} -{{flower.name}}</p>
-	</script>
-
-	<script type="text/x-handlebars-template" id="flower-template">
-		<div class="flower-container" id="flower-{{flower.id}}">
-			<div class="main-content">
-				<h3>{{flower.name}}</h3>
-			</div>
-			<div class="image">
-				{{#if flower.unlocked}}
-					<img class="read-button" src="{{flower.image}}">
-				{{else}}
-					<p>Hungry for {{flower.fed_cap}} Drops</p>
-					<img class="feed-button" src="{{flower.image}}">
-				{{/if}}
-			</div>
-			<div class="modal-overlay">
-			</div>
-			<div class="pure-g">
-				<div class="pure-u-1-3 poem-modal" style="display: none">
-					<button class="close-modal">X</button>
-					<p>{{flower.poem}}</p>
-				</div>
-			</div>
-			<div class="secrets-modal-overlay">
-			</div>
-			<div class="pure-g">
-				<div class="pure-u-12-24 secrets-game-modal" style="display: none">
-					<button class="close-secrets-modal">X</button>
-					<h1>Secrets Game</h1>
-					<p>Find the card that will let you tell {{flower.name}} a secret.  If {{flower.name}} likes your secret, it will tell you its own secret.</p>
-					<p>But be careful! Selecting the wrong card will make {{flower.name}} more hungry.</p>
-					<p>If you wish to opt out of this risk, click X.</p>
-					<div class="card-container">
-						<div class="card" id="card-1">
-						</div>
-						<div class="card" id="card-2">
-						</div>
-						<div class="card" id="card-3">
-						</div>
-						<div class="card" id="card-4">
-						</div>
-						<div class="card" id="card-5">
-						</div>
-						<div class="card" id="card-6">
-						</div>
-						<div class="card" id="card-7">
-						</div>
-						<div class="card" id="card-8">
-						</div>
-						<div class="card" id="card-9">
-						</div>
-					</div>
-					<div class="secrets-input-box" style="display: none">
-						<input class="secrets-input" type="text"><br>
-						<button class="submit-secrets-button">Submit</button>
-					</div>
-				</div>
-			</div>
-			<div class="worm-modal-overlay">
-			</div>
-			<div class="pure-g">
-				<div class="pure-u-1-3 worm-modal" style="display: none">
-					<button class="close-worm-modal">X</button>
-
-				</div>
-			</div>
+		<div id="secrets-box">
 		</div>
-	</script>
 
-	<script type="text/x-handlebars-template" id="rainwater-template">
-		<h4>Rainwater: {{user.rainwater}} Drops</h4>
-		<img id="tree" src="http://www.kintera.org/atf/cf/%7B124054d6-3e53-4efa-8f26-c97fd881dd86%7D/GIVING%20TREE%20FOR%20WEBSITE.PNG">
-	</script>
+		<div id='rainwater-container'>
+		</div>
+
+		<div id="grass-flowers-container">
+	<!-- 		generate flower cards to be displayed on "grass" -->
+		</div>
+
+		<div id="dirt-flowers-container">
+	<!-- 		generate flower cards to be displayed "underground" -->
+		</div>
+
+		<footer>
+			<h2>Do you have all of the secret words? Type them in here...</h2>
+			<input id="secret-phrase" type="text">
+			<button id="submit-secret-phrase">Submit</button>
+		</footer>
+
+		<script type="text/x-handlebars-template" id="secrets-box-template">
+			<p>{{flower.secret}} -{{flower.name}}</p>
+		</script>
+
+		<script type="text/x-handlebars-template" id="flower-template">
+			<div class="flower-container" id="flower-{{flower.id}}">
+				<div class="main-content">
+					<h3>{{flower.name}}</h3>
+				</div>
+				<div class="image">
+					{{#if flower.unlocked}}
+						<img class="read-button" src="{{flower.image}}">
+					{{else}}
+						<p>Hungry for {{flower.fed_cap}} Drops</p>
+						<img class="feed-button" src="{{flower.image}}">
+					{{/if}}
+				</div>
+				<div class="modal-overlay">
+				</div>
+				<div class="pure-g">
+					<div class="pure-u-1-3 poem-modal" style="display: none">
+						<button class="close-modal">X</button>
+						<p>{{flower.poem}}</p>
+					</div>
+				</div>
+				<div class="secrets-modal-overlay">
+				</div>
+				<div class="pure-g">
+					<div class="pure-u-12-24 secrets-game-modal" style="display: none">
+						<button class="close-secrets-modal">X</button>
+						<h1>Secrets Game</h1>
+						<p>Find the card that will let you tell {{flower.name}} a secret.  If {{flower.name}} likes your secret, it will tell you its own secret.</p>
+						<p>But be careful! Selecting the wrong card will make {{flower.name}} more hungry.</p>
+						<p>If you wish to opt out of this risk, click X.</p>
+						<div class="card-container">
+							<div class="card" id="card-1">
+							</div>
+							<div class="card" id="card-2">
+							</div>
+							<div class="card" id="card-3">
+							</div>
+							<div class="card" id="card-4">
+							</div>
+							<div class="card" id="card-5">
+							</div>
+							<div class="card" id="card-6">
+							</div>
+							<div class="card" id="card-7">
+							</div>
+							<div class="card" id="card-8">
+							</div>
+							<div class="card" id="card-9">
+							</div>
+						</div>
+						<div class="secrets-input-box" style="display: none">
+							<input class="secrets-input" type="text"><br>
+							<button class="submit-secrets-button">Submit</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</script>
+
+		<script type="text/x-handlebars-template" id="rainwater-template">
+			<h4>Rainwater: {{user.rainwater}} Drops</h4>
+			<img id="tree" src="http://www.kintera.org/atf/cf/%7B124054d6-3e53-4efa-8f26-c97fd881dd86%7D/GIVING%20TREE%20FOR%20WEBSITE.PNG">
+		</script>
+
+	</div>
 
 </body>
 </html>

@@ -29,35 +29,36 @@ $(document).ready(function(){
 				success: function(res){ 
 					level = res.attributes.level
 					console.log(level)
-					if (level < 3) {
-						if (that.model.attributes.fed_cap >= 25) {
-							calcWaterDrops();								
-						}
-						if (that.model.attributes.fed_cap === 0) {
-							unlockFlower();
-						}		
-					} else if ((level >=3 && level <5 && that.model.attributes.fed_cap !== 75) || (level >=3 && level < 5 && that.model.attributes.secrets_unlocked === true || that.model.attributes.secrets_opt_out === true)) {
-						if (that.model.attributes.fed_cap >=25) {
-							calcWaterDrops();
-						}
-						if (that.model.attributes.fed_cap === 0) {
-							unlockFlower();
-						}
-					} else if (level >=3 && that.model.attributes.fed_cap === 75 && that.model.attributes.secret_unlocked === false || that.model.attributes.secrets_opt_out === false) {
-						that.openSecretsModal();
-					} else if ((level >=5 && that.model.attributes.fed_cap !== 75) || (level >=5 && that.model.attributes.secrets_unlocked === true)) {
-						if (that.model.attributes.fed_cap >= 25) {
-							if (Math.floor(Math.random()*3) === 1) {
-								wormAttack();
-							} else {
-								calcWaterDrops();
-							}
-						} if (that.model.attributes.fed_cap === 0) {
-							unlockFlower();
-						}
-					} else if ((level >=5 && that.model.attributes.fed_cap !== 75) || (level >=5 && that.model.attributes.secrets_unlocked === false)) {
-						that.openSecretsModal();
-					}
+					wormAttack();
+					// if (level < 3) {
+					// 	if (that.model.attributes.fed_cap >= 25) {
+					// 		calcWaterDrops();								
+					// 	}
+					// 	if (that.model.attributes.fed_cap === 0) {
+					// 		unlockFlower();
+					// 	}		
+					// } else if ((level >=3 && level <5 && that.model.attributes.fed_cap !== 75) || (level >=3 && level < 5 && that.model.attributes.secrets_unlocked === true || that.model.attributes.secrets_opt_out === true)) {
+					// 	if (that.model.attributes.fed_cap >=25) {
+					// 		calcWaterDrops();
+					// 	}
+					// 	if (that.model.attributes.fed_cap === 0) {
+					// 		unlockFlower();
+					// 	}
+					// } else if (level >=3 && that.model.attributes.fed_cap === 75 && that.model.attributes.secret_unlocked === false || that.model.attributes.secrets_opt_out === false) {
+					// 	that.openSecretsModal();
+					// } else if ((level >=5 && that.model.attributes.fed_cap !== 75) || (level >=5 && that.model.attributes.secrets_unlocked === true)) {
+					// 	if (that.model.attributes.fed_cap >= 25) {
+					// 		if (Math.floor(Math.random()*3) === 1) {
+					// 			wormAttack();
+					// 		} else {
+					// 			calcWaterDrops();
+					// 		}
+					// 	} if (that.model.attributes.fed_cap === 0) {
+					// 		unlockFlower();
+					// 	}
+					// } else if ((level >=5 && that.model.attributes.fed_cap !== 75) || (level >=5 && that.model.attributes.secrets_unlocked === false)) {
+					// 	that.openSecretsModal();
+					// }
 
 					function calcWaterDrops (){
 						if (res.attributes.rainwater>=25) {
@@ -84,7 +85,192 @@ $(document).ready(function(){
 
 					function wormAttack (){
 						console.log('worm is attacking')
-						
+						$('#game-display').hide();
+						$('body').append('<div id="worm-game-container">'+
+							'<h2>Alas, your flower was attacked by a malicious worm. To bring it back to good health, you must collect celestial energy. Click on a glowing orb before it flickers out, and drag it to the moon for safekeeping. Fifteen orbs will save your flower!</h2>' +
+							'<h3>Hint: The longer you wait, the faster the orbs will move.</h3>' +
+							'<img id="dark-tree" src="/assets/tree.png" style="display: none">' +
+							'<img id="flower" src="/assets/flowerswhite.jpg" style="display: none">' +
+						'<canvas id="topLayer"></canvas>' +
+						'</div>')
+
+							var canvas = document.getElementById('topLayer');
+							var ctx = canvas.getContext('2d');
+
+							canvas.width = $(window).width();
+							canvas.height = 600
+
+							var particles = [];
+							var particleNum = 1;
+
+							var draggedParticles = [];
+							var inPlaceParticles = [];
+
+							var Particle = function(){
+								this.x = (Math.random()*canvas.width)
+								this.y = (Math.random()*canvas.height) - 200
+								this.antiGravity = .01;
+								this.velX = Math.random()*2 - Math.random()*2
+								this.velY = Math.random()*1
+								this.maxRadius = Math.random()*20
+
+								this.maxLife = 20;
+								this.life = 0;
+
+								this.draw = function(){
+									this.x += this.velX;
+									this.y += this.velY;
+
+									this.gravity = 1.4
+
+									ctx.beginPath();
+									ctx.arc(this.x, this.y, (Math.random()*this.maxRadius)/2, 0, 2 * Math.PI, true);
+									ctx.fillStyle = 'pink';
+									ctx.fill();
+									ctx.strokeStyle = 'white';
+									ctx.stroke();
+
+									this.velY*this.gravity
+
+									this.life+= Math.random();
+									if(this.life >= this.maxLife){
+									    delete particles[particles.indexOf(this)];
+									}
+								}
+
+							}
+
+							setInterval(function(){
+								var posX = -5
+								var posY = 400
+
+								ctx.fillStyle = "rgba(0, 34, 69, 0.4)";
+								ctx.fillRect(0,0, canvas.width, canvas.height);
+
+								var tree = document.getElementById('dark-tree');
+								ctx.drawImage(tree, -100, -100)
+
+								var flower = document.getElementById('flower');
+								ctx.drawImage(flower, posX, posY);
+								ctx.drawImage(flower, posX + 300, posY);
+								ctx.drawImage(flower, posX + 600, posY);
+								ctx.drawImage(flower, posX + 900, posY);
+
+								for(var i=0; i<particleNum; i++){
+								  var particle = new Particle();
+								  particles.push(particle);        
+								}
+								particles.forEach(function(el){ 
+								    el.draw();          
+								})
+								ctx.beginPath();
+								ctx.arc(canvas.width - 100, 95, 45, 0, 2 * Math.PI, true);
+								ctx.fillStyle = 'black';
+								ctx.fill();
+
+
+								draggedParticles.forEach(function(el){
+								    el.draw();          
+								})
+								inPlaceParticles.forEach(function(el){ 
+								    el.draw();          
+								})
+
+							}, 20)
+
+							canvasLeft = canvas.offsetLeft,
+							canvasTop = canvas.offsetTop
+
+							canvas.addEventListener('click', function(event) {
+							  	var x = event.pageX 
+							    var y = event.pageY 
+
+								particles.forEach(function(element) {
+									if (x < (element.x + 15 + canvasLeft) && x > (element.x -15 + canvasLeft) && y < (element.y + 15 + canvasTop) && y > (element.y -15 + canvasTop)) {
+										delete particles[particles.indexOf(element)];
+
+										var draggedParticle = function () {
+											this.x = event.pageX;
+											this.y = event.pageY;
+											this.draw = function (){
+												ctx.beginPath();
+												ctx.arc(this.x - canvasLeft, this.y - canvasTop, (Math.random()*15)/2 + 5, 0, 2 * Math.PI, true);
+												ctx.fillStyle = 'lightblue';
+												ctx.fill();
+												ctx.strokeStyle = 'white';
+												ctx.stroke();             
+										    }
+										}
+
+										var dragged = new draggedParticle();
+										draggedParticles.push(dragged);
+									}
+								});
+
+							function myMove(e){
+								draggedParticles.forEach(function(element){
+									element.x = e.pageX;
+									element.y = e.pageY;    
+								})
+							}
+
+							function myDown(e){
+								console.log('my down')
+								draggedParticles.forEach(function(element){
+									if (e.pageX < element.x + 15 && e.pageX > element.x - 15 && e.pageY < element.y + 15 &&
+									e.pageY > element.y -15){
+										element.x = e.pageX;
+										element.y = e.pageY;
+										canvas.onmousemove = myMove;
+									}      
+								})
+							}
+
+							function myUp(){
+								canvas.onmousemove = null;
+								console.log(event.pageX, event.pageY)
+							}
+
+							canvas.onmousedown = myDown;
+							canvas.onmouseup = myUp;
+
+							countDraggedParticles();
+
+						}, false);
+
+						function countDraggedParticles () {
+							draggedParticles.forEach(function(element){
+								if (element.x > canvas.width - 145 + canvasLeft && element.x < canvas.width - 55 + canvasLeft && element.y > 50 + canvasTop && element.y < 140 + canvasTop) {
+
+									console.log('you found the moon')
+
+
+									delete draggedParticles[draggedParticles.indexOf(element)];
+									var inPlaceParticle = function () {
+									    this.x = event.pageX;
+									    this.y = event.pageY;
+
+									    this.draw = function (){
+									      ctx.beginPath();
+									      ctx.arc(this.x - canvasLeft, this.y - canvasTop, (Math.random()*10)/2, 0, 2 * Math.PI, true);
+									      ctx.fillStyle = 'lightblue';
+									      ctx.fill();
+									      ctx.strokeStyle = 'white';
+									      ctx.stroke();
+									    }
+									}
+									var newParticle = new inPlaceParticle();
+									inPlaceParticles.push(newParticle);
+
+									if (inPlaceParticles.length === 15) {
+									  alert('you have won!')
+									  $('body').remove('#worm-game-container')
+									  $('#game-display').show();
+									  that.model.save({fed_cap: 25});
+									}
+								}
+							});
+						}
 					}
 				}
 			});
@@ -221,16 +407,26 @@ $(document).ready(function(){
 
 	App.Routers.FlowerRouter = Backbone.Router.extend({
 		routes: {
-			"flowers/:id/game" : "showGame",
-			"flowers/:id/poem" : "showPoem"
+			"": "redirectToMain",
+			"main": "renderMainPage"
 		},
+		redirectToMain: function() {
+		    flowerRouter.navigate("main", {trigger: true})
+		},
+		renderMainPage: function(){
+			$('#game-display').show();
+			$('#secrets-box').empty();
+			$('#rainwater-container').empty();
+			$('#grass-flowers-container').empty();
+			$('#dirt-flowers-container').empty();
+			var flowers = new App.Collections.Flowers();
+			var purgatoryFlowersView = new App.Views.PurgatoryFlowersView({collection: flowers});
+			var hellFlowersView = new App.Views.HellFlowersView({collection: flowers});
+			var secretsBoxesView = new App.Views.SecretsBoxesView({collection: flowers});			
+		}
 	})
 
 	var flowerRouter = new App.Routers.FlowerRouter();
 	Backbone.history.start();
 
-	var flowers = new App.Collections.Flowers();
-	var purgatoryFlowersView = new App.Views.PurgatoryFlowersView({collection: flowers});
-	var hellFlowersView = new App.Views.HellFlowersView({collection: flowers});
-	var secretsBoxesView = new App.Views.SecretsBoxesView({collection: flowers});
 })
