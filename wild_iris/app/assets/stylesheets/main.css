@@ -41,6 +41,26 @@ body{
 	z-index: 12;
 }
 
+.secrets-game-modal {
+	left: 25%;
+}
+
 .close-game-modal, .close-modal {
 	float: right;
+}
+
+.card {
+	height: 200px;
+	width: 200px;
+	float: left;
+	background-color: white;
+	margin: 1px;
+}
+
+.card-container {
+	margin: 0px auto;
+}
+
+.footer {
+	clear: both;
 }

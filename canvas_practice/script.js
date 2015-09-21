@@ -13,12 +13,13 @@ $(document).ready(function(){
 
   var Particle = function(){
     this.x = (Math.random()*canvas.width)
-    this.y = (Math.random()*canvas.height)
+    this.y = (Math.random()*canvas.height) - 200
     this.antiGravity = .01;
-    this.velX = Math.random()*3 - Math.random()*3
-    this.velY = Math.random() - Math.random()
+    this.velX = Math.random()*2 - Math.random()*2
+    this.velY = Math.random()*1
+    this.maxRadius = Math.random()*20
 
-    this.maxLife = 30;
+    this.maxLife = 20;
     this.life = 0;
 
     this.draw = function(){
@@ -28,10 +29,10 @@ $(document).ready(function(){
       this.gravity = 0.005
         
       ctx.beginPath();
-      ctx.arc(this.x, this.y, (Math.random()*20)/2, 0, 2 * Math.PI, true);
+      ctx.arc(this.x, this.y, (Math.random()*this.maxRadius)/2, 0, 2 * Math.PI, true);
       ctx.fillStyle = 'white';
       ctx.fill();
-      ctx.strokeStyle = 'yellow';
+      ctx.strokeStyle = 'pink';
       ctx.stroke();
 
       if (this.velY >= 0) {
@@ -100,7 +101,7 @@ $(document).ready(function(){
               this.y = event.pageY;
               this.draw = function (){
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, (Math.random()*20)/2 + 5, 0, 2 * Math.PI, true);
+                ctx.arc(this.x, this.y, (Math.random()*15)/2 + 5, 0, 2 * Math.PI, true);
                 ctx.fillStyle = 'lightblue';
                 ctx.fill();
                 ctx.strokeStyle = 'white';
@@ -152,12 +153,12 @@ $(document).ready(function(){
         var inPlaceParticle = function () {
             this.x = event.pageX;
             this.y = event.pageY;
-            this.velX = Math.random()*3 - Math.random()*3
-            this.velY = Math.random()*3 - Math.random()*3 
+            // this.velX = Math.random()*3 - Math.random()*3
+            // this.velY = Math.random()*3 - Math.random()*3 
 
             this.draw = function (){
-              this.x += this.velX;
-              this.y += this.velY;
+              // this.x += this.velX;
+              // this.y += this.velY;
               ctx.beginPath();
               ctx.arc(this.x, this.y, (Math.random()*10)/2, 0, 2 * Math.PI, true);
               ctx.fillStyle = 'lightblue';
@@ -165,21 +166,21 @@ $(document).ready(function(){
               ctx.strokeStyle = 'white';
               ctx.stroke();
 
-              if (this.x <= canvas.width - 135){
-                this.velX = 1;
-              } else if (this.x >= canvas.width - 65){
-                this.velX = -1
-              } else if (this.y <= 60){
-                this.velY = 1;
-              } else if (this.y >= 130) {
-                this.velY = -1
-              }
+              // if (this.x <= canvas.width - 135){
+              //   this.velX = 1;
+              // } else if (this.x >= canvas.width - 65){
+              //   this.velX = -1
+              // } else if (this.y <= 60){
+              //   this.velY = 1;
+              // } else if (this.y >= 130) {
+              //   this.velY = -1
+              // }
             }
         }
         var newParticle = new inPlaceParticle();
         inPlaceParticles.push(newParticle);
 
-        if (inPlaceParticles.length === 10) {
+        if (inPlaceParticles.length === 15) {
           alert('you have won!')
         }
       }

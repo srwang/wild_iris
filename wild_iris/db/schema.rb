@@ -21,8 +21,11 @@ ActiveRecord::Schema.define(version: 20150916164543) do
     t.string   "image"
     t.string   "location"
     t.boolean  "unlocked"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "secret"
+    t.boolean  "secret_unlocked"
+    t.boolean  "secret_opt_out"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.integer  "user_id"
   end
 

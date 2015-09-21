@@ -8,6 +8,9 @@ class CreateFlowers < ActiveRecord::Migration
       t.string :image
       t.string :location
       t.boolean :unlocked
+      t.string :secret
+      t.boolean :secret_unlocked
+      t.boolean :secret_opt_out
 
       t.timestamps null: false
     end
