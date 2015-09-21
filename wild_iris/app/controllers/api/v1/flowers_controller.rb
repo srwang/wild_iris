@@ -18,6 +18,6 @@ class Api::V1::FlowersController < ApplicationController
 	private
 
 	def flower_params
-		params.permit(:fed_cap, :unlocked, :secret_unlocked)
+		params.permit(:fed_cap, :unlocked, :secret_unlocked, :secret_opt_out, :alive)
 	end
 end

@@ -5,6 +5,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :password
       t.integer :level
       t.integer :rainwater
+      t.boolean :won
 
       t.timestamps null: false
     end

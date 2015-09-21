@@ -6,6 +6,7 @@ $(document).ready(function(){
 			'click .read-button': 'read',
 			'click .close-modal': 'closeModal',
 			'click .feed-button': 'decreaseHunger',
+			'click .secrets-game-button': 'openSecretsModal',
 			'click .open-secrets-modal': 'openSecrectsModal',
 			'click .close-secrets-modal': 'closeSecretsModal',
 			'click .submit-secrets-button': 'calcSecretStrength'
@@ -13,6 +14,11 @@ $(document).ready(function(){
 		render: function(){
 			this.$el.html(this.template({flower: this.model.toJSON()}));	
 			return this
+		},
+		openSecretButtons: function(){
+			if (this.model.attributes.secret_unlocked === false) {
+				$('.secrets-game-button').show();
+			}
 		},
 		read: function(){
 			this.$('.poem-modal').toggle();
@@ -29,36 +35,56 @@ $(document).ready(function(){
 				success: function(res){ 
 					level = res.attributes.level
 					console.log(level)
-					wormAttack();
-					// if (level < 3) {
-					// 	if (that.model.attributes.fed_cap >= 25) {
-					// 		calcWaterDrops();								
-					// 	}
-					// 	if (that.model.attributes.fed_cap === 0) {
-					// 		unlockFlower();
-					// 	}		
-					// } else if ((level >=3 && level <5 && that.model.attributes.fed_cap !== 75) || (level >=3 && level < 5 && that.model.attributes.secrets_unlocked === true || that.model.attributes.secrets_opt_out === true)) {
-					// 	if (that.model.attributes.fed_cap >=25) {
-					// 		calcWaterDrops();
-					// 	}
-					// 	if (that.model.attributes.fed_cap === 0) {
-					// 		unlockFlower();
-					// 	}
-					// } else if (level >=3 && that.model.attributes.fed_cap === 75 && that.model.attributes.secret_unlocked === false || that.model.attributes.secrets_opt_out === false) {
-					// 	that.openSecretsModal();
-					// } else if ((level >=5 && that.model.attributes.fed_cap !== 75) || (level >=5 && that.model.attributes.secrets_unlocked === true)) {
-					// 	if (that.model.attributes.fed_cap >= 25) {
-					// 		if (Math.floor(Math.random()*3) === 1) {
-					// 			wormAttack();
-					// 		} else {
-					// 			calcWaterDrops();
-					// 		}
-					// 	} if (that.model.attributes.fed_cap === 0) {
-					// 		unlockFlower();
-					// 	}
-					// } else if ((level >=5 && that.model.attributes.fed_cap !== 75) || (level >=5 && that.model.attributes.secrets_unlocked === false)) {
-					// 	that.openSecretsModal();
-					// }
+					console.log(that.model.attributes.fed_cap, that.model.attributes.secret_unlocked, that.model.attributes.secret_opt_out)
+
+					if (that.model.attributes.alive === false) {
+						wormAttack();
+					} else if (level < 3) {					
+						if (that.model.attributes.fed_cap >= 25) {
+							calcWaterDrops();		
+						}
+						if (that.model.attributes.fed_cap === 0) {
+							unlockFlower();
+						}		
+					} else if ((level >=3 && level <5) && (that.model.attributes.fed_cap !== 75 || that.model.attributes.secret_unlocked === true || that.model.attributes.secret_opt_out === true)) {
+						if (that.model.attributes.fed_cap >=25) {
+							calcWaterDrops();
+						}
+						if (that.model.attributes.fed_cap === 0) {
+							unlockFlower();
+						}
+					} else if (level >=5 && (that.model.attributes.fed_cap !== 75 || that.model.attributes.secret_unlocked === true || that.model.attributes.secret_opt_out === true)) {
+						if (that.model.attributes.fed_cap >= 25) {
+							if (Math.floor(Math.random()*4) === 1) {
+								wormAttack();
+							} else {
+								calcWaterDrops();
+							}
+						} 
+						if (that.model.attributes.fed_cap === 0) {
+							unlockFlower();
+						}
+					} else if (level >=3 && that.model.attributes.fed_cap === 75 && that.model.attributes.secret_unlocked === false && that.model.attributes.secret_opt_out === false) {
+						that.openSecretsModal();
+					} 
+					calcWin();
+
+					function calcWin(){
+						console.log('trying to figure out if you won')
+						var allFlowers = that.model.collection.models;
+						var allUnlocked = true;
+						for (i=0; i<allFlowers.length; i++){
+							if (allFlowers[i].attributes.unlocked === false) {
+								allUnlocked = false;
+							}
+						}
+						if (allUnlocked === true){
+							// res.save({won: true});
+							that.$('.secrets-game-button');
+
+							debugger
+						}
+					}
 
 					function calcWaterDrops (){
 						if (res.attributes.rainwater>=25) {
@@ -84,7 +110,8 @@ $(document).ready(function(){
 					}
 
 					function wormAttack (){
-						console.log('worm is attacking')
+						that.model.save({alive: false});
+
 						$('#game-display').hide();
 						$('body').append('<div id="worm-game-container">'+
 							'<h2>Alas, your flower was attacked by a malicious worm. To bring it back to good health, you must collect celestial energy. Click on a glowing orb before it flickers out, and drag it to the moon for safekeeping. Fifteen orbs will save your flower!</h2>' +
@@ -114,7 +141,7 @@ $(document).ready(function(){
 								this.velY = Math.random()*1
 								this.maxRadius = Math.random()*20
 
-								this.maxLife = 20;
+								this.maxLife = 100;
 								this.life = 0;
 
 								this.draw = function(){
@@ -137,7 +164,6 @@ $(document).ready(function(){
 									    delete particles[particles.indexOf(this)];
 									}
 								}
-
 							}
 
 							setInterval(function(){
@@ -263,10 +289,10 @@ $(document).ready(function(){
 									inPlaceParticles.push(newParticle);
 
 									if (inPlaceParticles.length === 15) {
-									  alert('you have won!')
-									  $('body').remove('#worm-game-container')
+									  alert('Congratulations, you have saved the life of your flower!')
+									  $('#worm-game-container').remove();
 									  $('#game-display').show();
-									  that.model.save({fed_cap: 25});
+									  that.model.save({fed_cap: 25, alive: true});
 									}
 								}
 							});
@@ -322,7 +348,7 @@ $(document).ready(function(){
 			this.$('.secrets-modal-overlay').toggle();
 
 			if (this.model.attributes.fed_cap === 75) {
-				this.model.save({secrets_opt_out: true});
+				this.model.save({secret_opt_out: true});
 			}
 
 			var moreHunger = document.cookie.split('=');
@@ -346,7 +372,7 @@ $(document).ready(function(){
 		}
 	})
 
-	App.Views.PurgatoryFlowersView = Backbone.View.extend({
+	App.Views.PurgatoryFlowersView = Backbone.View.extend({ //working here!!!!!!!
 		el: '#grass-flowers-container',
 		initialize: function(){
 			this.collection.fetch();
@@ -355,9 +381,23 @@ $(document).ready(function(){
 		render: function(){
 			this.$el.html('');
 
+			var allFlowers = this.collection.models;
+			var allUnlocked = true;
+			for (i=0; i<allFlowers.length; i++){
+				if (allFlowers[i].attributes.unlocked === false) {
+					allUnlocked = false;
+				}
+			}
+
 			this.collection.each(function(flower){
 				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "purgatory") {
-					this.$el.append(new App.Views.FlowerView({model: flower}).render().$el);					
+
+					var flowerView = new App.Views.FlowerView({model: flower});
+					this.$el.append(flowerView.render().$el);	
+
+					if (allUnlocked === true){					
+						flowerView.openSecretButtons();
+					}
 				}
 			}.bind(this))
 		}
@@ -372,9 +412,22 @@ $(document).ready(function(){
 		render: function(){
 			this.$el.html('');
 
+			var allFlowers = this.collection.models;
+			var allUnlocked = true;
+			for (i=0; i<allFlowers.length; i++){
+				if (allFlowers[i].attributes.unlocked === false) {
+					allUnlocked = false;
+				}
+			}
+
 			this.collection.each(function(flower){
 				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "hell") {
-					this.$el.append(new App.Views.FlowerView({model: flower}).render().$el);					
+					var flowerView = new App.Views.FlowerView({model: flower});
+					this.$el.append(flowerView.render().$el);		
+
+					if (allUnlocked === true){					
+						flowerView.openSecretButtons();
+					}				
 				}
 			}.bind(this))
 		}

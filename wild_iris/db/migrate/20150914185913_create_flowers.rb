@@ -11,6 +11,7 @@ class CreateFlowers < ActiveRecord::Migration
       t.string :secret
       t.boolean :secret_unlocked
       t.boolean :secret_opt_out
+      t.boolean :alive
 
       t.timestamps null: false
     end

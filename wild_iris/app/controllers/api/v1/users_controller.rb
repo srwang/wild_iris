@@ -18,6 +18,6 @@ class Api::V1::UsersController < ApplicationController
 	private
 
 	def user_params
-		params.permit(:level, :rainwater)
+		params.permit(:level, :rainwater, :won)
 	end
 end

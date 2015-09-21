@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20150916164543) do
     t.string   "secret"
     t.boolean  "secret_unlocked"
     t.boolean  "secret_opt_out"
+    t.boolean  "alive"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.integer  "user_id"
@@ -36,6 +37,7 @@ ActiveRecord::Schema.define(version: 20150916164543) do
     t.string   "password"
     t.integer  "level"
     t.integer  "rainwater"
+    t.boolean  "won"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

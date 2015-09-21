@@ -53,6 +53,7 @@
 						<p>Hungry for {{flower.fed_cap}} Drops</p>
 						<img class="feed-button" src="{{flower.image}}">
 					{{/if}}
+					<button class="secrets-game-button" style="display: none">Play Secrets Game</button>
 				</div>
 				<div class="modal-overlay">
 				</div>
@@ -68,7 +69,7 @@
 					<div class="pure-u-12-24 secrets-game-modal" style="display: none">
 						<button class="close-secrets-modal">X</button>
 						<h1>Secrets Game</h1>
-						<p>Find the card that will let you tell {{flower.name}} a secret.  If {{flower.name}} likes your secret, it will tell you its own secret.</p>
+						<p>Find the card that will let you tell {{flower.name}} a secret. If {{flower.name}} likes your secret, it will tell you its own secret.</p>
 						<p>But be careful! Selecting the wrong card will make {{flower.name}} more hungry.</p>
 						<p>If you wish to opt out of this risk, click X.</p>
 						<div class="card-container">
