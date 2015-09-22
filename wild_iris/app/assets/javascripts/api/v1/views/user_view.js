@@ -14,6 +14,7 @@ $(document).ready(function(){
 			return this
 		},
 		addWater: function(){
+			console.log('clicked')
 			var newDropQuantity = this.model.attributes.rainwater + 15;
 			this.model.save({rainwater: newDropQuantity});
 		}

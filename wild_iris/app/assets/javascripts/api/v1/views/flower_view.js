@@ -16,9 +16,8 @@ $(document).ready(function(){
 			return this
 		},
 		openSecretButtons: function(){
-				console.log(this.model.attributes.name, this.model.attributes.secret_unlocked)
 			if (this.model.attributes.secret_unlocked === false) {
-				$('.secrets-game-button').show();
+				this.$('.secrets-game-button').show();
 			}
 		},
 		read: function(){
@@ -70,20 +69,17 @@ $(document).ready(function(){
 					} 
 					calcWin();
 
-					function calcWin(){//maybe get rid of this
-						console.log('trying to figure out if you won')
-						// var allFlowers = that.model.collection.models;
-						// var allUnlocked = true;
-						// for (i=0; i<allFlowers.length; i++){
-						// 	if (allFlowers[i].attributes.unlocked === false) {
-						// 		allUnlocked = false;
-						// 	}
-						// }
-						// if (allUnlocked === true){
-						// 	that.$('.secrets-game-button');
-
-						// 	debugger
-						// }
+					function calcWin(){
+						var allFlowers = that.model.collection.models;
+						var allUnlocked = true;
+						for (i=0; i<allFlowers.length; i++){
+							if (allFlowers[i].attributes.unlocked === false) {
+								allUnlocked = false;
+							}
+						}
+						if (allUnlocked === true){
+							alert('Congrats, you have unlocked all of the flowers! You have the chance to go back and unlock all of their secrets.')
+						}
 					}
 
 					function calcWaterDrops (){
@@ -141,7 +137,7 @@ $(document).ready(function(){
 								this.velY = Math.random()*1
 								this.maxRadius = Math.random()*20
 
-								this.maxLife = 100;
+								this.maxLife = 20;
 								this.life = 0;
 
 								this.draw = function(){
@@ -302,7 +298,7 @@ $(document).ready(function(){
 			});
 		},
 		openSecretsModal: function(){
-			var flowers = ["Wild Iris", "Red Poppy", "Lamium", "Snowdrops", "The White Rose", "Violets", "Trillium", "Vespers", "Tree"]
+			var flowers = ["Wild Iris", "Red Poppy", "Lamium", "Snowdrops", "The White Rose", "Violets", "Trillium", "Matins", "Witchgrass"]
 			var flowerColors = ["red", "rgba(241, 241, 34, 0.66)", "blue", "purple", "#F1DADA", "rgba(212, 131, 212, 0.82)", "rgba(18, 88, 156, 0.82)", "pink", "yellow", "lightblue"]
 			var flowerCenters = ["black", "yellow", "purple", "pink", "lightblue", "white", "red", "gray", "purple"]
 
@@ -325,7 +321,7 @@ $(document).ready(function(){
 				'</svg>';
 				this.$('#card-' + i).html('').append(flowerHtml);
 
-				this.$('#card-' + i).click(function(){
+				this.$('#card-' + i).click(function(){ // working here
 					var flower = flowers[Math.floor(Math.random()*flowers.length)];
 					flowers.splice(flowers.indexOf(flower), 1);
 
@@ -333,6 +329,29 @@ $(document).ready(function(){
 						alert('congratulations you picked' + flower + '. tell' + flower + 'your secret in the box at the bottom.')
 						this.$('.secrets-input-box').toggle();
 					} else {
+						var imageName = "";
+						if (flower === "Wild Iris") {
+							imageName = "iris"
+						} else if (flower === "Red Poppy") {
+							imageName = "poppy"
+						} else if (flower === "Lamium"){
+							imageName = "lamium"
+						} else if (flower === "Snowdrops") {
+							imageName = "snowdrops"
+						} else if (flower === "The White Rose") {
+							imageName = "rose"
+						} else if (flower === "Violets") {
+							imageName = "violets"
+						} else if (flower === "Trillium") {
+							imageName = "trillium"
+						} else if (flower === "Matins") {
+							imageName = "matins"
+						} else if (flower === "Witchgrass") {
+							imageName = "witchgrass"
+						}
+
+						this.$('#card-' + i).html('')
+						this.$('#card-' + i).css({"background-image": url('/assets/' + imageName + '.png')})
 						alert('sorry you picked ' + flower + '. you are looking for ' + this.model.attributes.name + '!')//change this alert to something else
 						moreHunger += 25;
 						document.cookie="moreHunger=" + moreHunger; 
@@ -393,10 +412,10 @@ $(document).ready(function(){
 				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "purgatory") {
 
 					var flowerView = new App.Views.FlowerView({model: flower});
+					this.$el.append(flowerView.render().$el);	
 					if (allUnlocked === true){					
 						flowerView.openSecretButtons();
 					}
-					this.$el.append(flowerView.render().$el);	
 
 				}
 			}.bind(this))
@@ -423,13 +442,11 @@ $(document).ready(function(){
 			this.collection.each(function(flower){
 				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "hell") {
 
-					console.log(flower.attributes.name, flower.attributes.location)
-
 					var flowerView = new App.Views.FlowerView({model: flower});
+					this.$el.append(flowerView.render().$el);		
 					if (allUnlocked === true){					
 						flowerView.openSecretButtons();
 					}				
-					this.$el.append(flowerView.render().$el);		
 
 				}
 			}.bind(this))

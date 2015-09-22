@@ -1,18 +1,124 @@
 html, body{
-  min-height: 100%;
+  	min-height: 100%;
 }
 
 body{
-  position: relative;
+  	position: relative;
+  	margin: 0px 300px;
+/*  	background-color: rgba(233, 244, 247, 0.21);*/
+  }
+
+* {
+	box-sizing: border-box;
+	font-family: 'Slabo 27px', sans-serif;
+/*	color: rgba(78, 45, 86, 0.85);*/
+	line-height: 110%;
 }
 
-.rainwater-container {
+.clearfix:before, .clearfix:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+ }
+
+header {	
+	text-align: center;
+	margin: 0 auto;
+	padding: 50px 20px;
+	width: 100%;
+	background-color: rgba(78, 45, 86, 0.3);
+	/*background-image: url('http://wallpoop.com/wp-content/uploads/2013/03/wallpaper-crocus-flower-buds-violet-primrose-snow-spring-flowers.jpg');
+	background-position: right top;*/
+}
+
+header h1 {
+	font-size: 6em;	
+	color: black;
+}
+
+header a {
+	font-size: 1.5em;
+	padding: 0px 5px;
+	color: black;
+}
+
+span {
+	font-style: italic;
+	color: black;
+}
+
+#game-display {
+	margin: 0;
+	padding: 0;
+}
+
+#rainwater-container {
+	margin: 0px;
+	background-image: url('/assets/tree3.jpg');
+	background-position: cover;
+	background-repeat: no-repeat;
+	height: 800px;
+}
+
+#tree {
+	float: left;
+	position: relative;
+	left: 80px;
+	top: 30px;
+	height: 680px;
+	width: 700px;
+}
+
+#secrets-box-container {
 	float: right;
+	position: absolute;
+	right: 10%;
+	border: 2px gray solid;
+	padding: 20px;
+}
+
+#grass-flowers-container {
+	background-image: url('http://img09.deviantart.net/e825/i/2011/332/b/3/field_of_little_white_flowers_by_gin7gin8-d4hg3mo.jpg');
+	background-position: center bottom;
+}
+
+#dirt-flowers-container {
+	background-image: url('https://upload.wikimedia.org/wikipedia/commons/2/29/Exposed_mango_tree_roots.jpg');
+	background-position: center bottom;
 }
 
 .flower-container {
+	background-color: rgba(233, 244, 247, 0.50);
+	border-radius: 2%;
+	height: 300px;
+	width: 300px;
 	float: left;
-	margin: 10px;
+	margin: 30px;
+	text-align: center;
+}
+
+.flower-container h3 {
+	text-transform: uppercase;
+}
+
+#dirt-flowers-container .flower-container {
+	margin: 70px;
+}
+
+#grass-flowers-container .flower-container {
+	background-color: rgba(233, 244, 247, 0.70);
+}
+
+.img-container {
+	height: 200px;
+	width: 200px;
+	margin: 0px auto;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .secrets-modal-overlay, .modal-overlay{
@@ -36,13 +142,18 @@ body{
 	white-space: pre-wrap;
 	padding: 20px;
 	border-radius: 2%;
-	background-color: lightgray;
+	background-color: white;
 	overflow: scroll;
 	z-index: 12;
+	text-align: left;
+	padding: 50px;
 }
 
 .secrets-game-modal {
 	left: 25%;
+}
+
+.poem-modal {
 }
 
 .close-game-modal, .close-modal {
@@ -63,4 +174,6 @@ body{
 
 .footer {
 	clear: both;
+	position: absolute;
+	text-align: center;
 }
