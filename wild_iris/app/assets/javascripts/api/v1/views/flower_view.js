@@ -16,6 +16,7 @@ $(document).ready(function(){
 			return this
 		},
 		openSecretButtons: function(){
+				console.log(this.model.attributes.name, this.model.attributes.secret_unlocked)
 			if (this.model.attributes.secret_unlocked === false) {
 				$('.secrets-game-button').show();
 			}
@@ -69,21 +70,20 @@ $(document).ready(function(){
 					} 
 					calcWin();
 
-					function calcWin(){
+					function calcWin(){//maybe get rid of this
 						console.log('trying to figure out if you won')
-						var allFlowers = that.model.collection.models;
-						var allUnlocked = true;
-						for (i=0; i<allFlowers.length; i++){
-							if (allFlowers[i].attributes.unlocked === false) {
-								allUnlocked = false;
-							}
-						}
-						if (allUnlocked === true){
-							// res.save({won: true});
-							that.$('.secrets-game-button');
+						// var allFlowers = that.model.collection.models;
+						// var allUnlocked = true;
+						// for (i=0; i<allFlowers.length; i++){
+						// 	if (allFlowers[i].attributes.unlocked === false) {
+						// 		allUnlocked = false;
+						// 	}
+						// }
+						// if (allUnlocked === true){
+						// 	that.$('.secrets-game-button');
 
-							debugger
-						}
+						// 	debugger
+						// }
 					}
 
 					function calcWaterDrops (){
@@ -393,11 +393,11 @@ $(document).ready(function(){
 				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "purgatory") {
 
 					var flowerView = new App.Views.FlowerView({model: flower});
-					this.$el.append(flowerView.render().$el);	
-
 					if (allUnlocked === true){					
 						flowerView.openSecretButtons();
 					}
+					this.$el.append(flowerView.render().$el);	
+
 				}
 			}.bind(this))
 		}
@@ -422,12 +422,15 @@ $(document).ready(function(){
 
 			this.collection.each(function(flower){
 				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "hell") {
-					var flowerView = new App.Views.FlowerView({model: flower});
-					this.$el.append(flowerView.render().$el);		
 
+					console.log(flower.attributes.name, flower.attributes.location)
+
+					var flowerView = new App.Views.FlowerView({model: flower});
 					if (allUnlocked === true){					
 						flowerView.openSecretButtons();
 					}				
+					this.$el.append(flowerView.render().$el);		
+
 				}
 			}.bind(this))
 		}
