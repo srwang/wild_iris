@@ -17,7 +17,7 @@
 	<div id="game-display">
 
 		<div id="secrets-box-container">
-			<h3>Collected Secrets</h3>
+			<h2>Collected Secrets</h2>
 			<div id="secrets-box">
 			</div>
 		</div>
@@ -36,9 +36,6 @@
 		<div class="clearfix" id="earth-box">
 		</div>
 
-		<div id="">
-		</div>
-
 		<footer>
 			<h2>Do you have all of the secret words? Type a sentence with all of the secrets...</h2>
 			<input id="secret-phrase" type="text">
@@ -46,7 +43,7 @@
 		</footer>
 
 		<script type="text/x-handlebars-template" id="secrets-box-template">
-			<p>{{flower.secret}} -{{flower.name}}</p>
+			<h3>{{flower.secret}} -{{flower.name}}</h3>
 		</script>
 
 		<script type="text/x-handlebars-template" id="flower-template">
@@ -79,31 +76,35 @@
 					<div class="pure-u-12-24 secrets-game-modal" style="display: none">
 						<button class="close-secrets-modal">X</button>
 						<h1>Secrets Game</h1>
-						<p>Find the card that will let you tell {{flower.name}} a secret. If {{flower.name}} likes your secret, it will tell you its own secret.</p>
-						<p>But be careful! Selecting the wrong card will make {{flower.name}} more hungry.</p>
-						<p>If you wish to opt out of this risk, click X.</p>
+						<p>Find the card that will let you tell {{flower.name}} a secret. If {{flower.name}} likes your secret, it will tell you its own secret.<br>But be careful! Selecting the wrong card will make {{flower.name}} more hungry.<br>If you wish to opt out of this risk, click X.</p>
 						<div class="card-container">
-							<div class="card" id="card-1">
+							<div class="pure-g">
+								<div class="card pure-u-7-24" id="card-1">
+								</div>
+								<div class="card pure-u-7-24" id="card-2">
+								</div>
+								<div class="card pure-u-7-24" id="card-3">
+								</div>
 							</div>
-							<div class="card" id="card-2">
+							<div class="pure-g">
+								<div class="card pure-u-7-24" id="card-4">
+								</div>
+								<div class="card pure-u-7-24" id="card-5">
+								</div>
+								<div class="card pure-u-7-24" id="card-6">
+								</div>
 							</div>
-							<div class="card" id="card-3">
-							</div>
-							<div class="card" id="card-4">
-							</div>
-							<div class="card" id="card-5">
-							</div>
-							<div class="card" id="card-6">
-							</div>
-							<div class="card" id="card-7">
-							</div>
-							<div class="card" id="card-8">
-							</div>
-							<div class="card" id="card-9">
+							<div class="pure-g">
+								<div class="card pure-u-7-24" id="card-7">
+								</div>
+								<div class="card pure-u-7-24" id="card-8">
+								</div>
+								<div class="card pure-u-7-24" id="card-9">
+								</div>
 							</div>
 						</div>
 						<div class="secrets-input-box" style="display: none">
-							<input class="secrets-input" type="text"><br>
+							<input class="secrets-input" type="text" placeholder="man, that which you call death... I can kind of remember too"><br>
 							<button class="submit-secrets-button">Submit</button>
 						</div>
 					</div>
@@ -112,14 +113,26 @@
 		</script>
 
 		<script type="text/x-handlebars-template" id="garden-poems-template">
-			<div class="hidden-item-container" id="hidden-{{flower.id}}" style="display: none">
-				<h3>{{flower.name}}</h3>
-				<img class="read-button" src="{{flower.image}}">
+			<div class="hidden-item-container" id='hidden-{{flower.id}}'>
+				<div class="hidden-img-container read-button" style="background-image: url('{{flower.image}}')">
+				</div>
+				<h4>{{flower.name}}</h4>
+			</div>
+			<div class="modal-overlay">
+			</div>
+			<div class="pure-g">
+				<div class="pure-u-1-3 poem-modal" style="display: none">
+					<button class="close-modal">X</button>
+					<p>{{flower.poem}}</p>
+				</div>
 			</div>
 		</script>
 
 		<script type="text/x-handlebars-template" id="rainwater-template">
 			<h2>Rainwater: {{user.rainwater}} Drops</h2>
+			<div id='level-box'>
+				<h3>Unlocked Levels: 1. Feed Flowers</h3>
+			</div>
 			<div id="tree"></div>
 		</script>
 

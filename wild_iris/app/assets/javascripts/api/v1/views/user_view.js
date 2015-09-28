@@ -3,7 +3,6 @@ $(document).ready(function(){
 	App.Views.UserView = Backbone.View.extend({
 		template: Handlebars.compile($('#rainwater-template').html()),
 		initialize: function(){
-			// this.model.fetch()
 			this.listenTo(this.model, 'change', this.render);
 		},
 		events: {
@@ -17,6 +16,12 @@ $(document).ready(function(){
 			console.log('clicked')
 			var newDropQuantity = this.model.attributes.rainwater + 15;
 			this.model.save({rainwater: newDropQuantity});
+		},
+		addLevelTwo: function(){
+			this.$('#level-box').find('h3').append(', 2. Secrets Game')
+		},
+		addLevelThree: function(){
+			this.$('#level-box').find('h3').append(', 3. Worm Attack')
 		}
 	})
 
@@ -30,8 +35,17 @@ $(document).ready(function(){
 			this.$el.html('');
 
 			this.collection.each(function(user){
-				this.$el.append(new App.Views.UserView({model: user}).render().$el);
+				var userView = new App.Views.UserView({model: user});
+
+				this.$el.append(userView.render().$el);
+				if (user.attributes.level >= 2) {
+					userView.addLevelTwo();
+				} 
+				if (user.attributes.level >= 4){
+					userView.addLevelThree();
+				}
 			}.bind(this))
+
 		}
 	})
 

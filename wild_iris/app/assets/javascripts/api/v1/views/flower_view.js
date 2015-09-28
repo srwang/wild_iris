@@ -39,21 +39,21 @@ $(document).ready(function(){
 
 					if (that.model.attributes.alive === false) {
 						wormAttack();
-					} else if (level < 3) {					
+					} else if (level < 2) {					
 						if (that.model.attributes.fed_cap >= 25) {
 							calcWaterDrops();		
 						}
 						if (that.model.attributes.fed_cap === 0) {
 							unlockFlower();
 						}		
-					} else if ((level >=3 && level <5) && (that.model.attributes.fed_cap !== 75 || that.model.attributes.secret_unlocked === true || that.model.attributes.secret_opt_out === true)) {
+					} else if ((level >=2 && level <4) && (that.model.attributes.fed_cap !== 75 || that.model.attributes.secret_unlocked === true || that.model.attributes.secret_opt_out === true)) {
 						if (that.model.attributes.fed_cap >=25) {
 							calcWaterDrops();
 						}
 						if (that.model.attributes.fed_cap === 0) {
 							unlockFlower();
 						}
-					} else if (level >=5 && (that.model.attributes.fed_cap !== 75 || that.model.attributes.secret_unlocked === true || that.model.attributes.secret_opt_out === true)) {
+					} else if (level >=4 && (that.model.attributes.fed_cap !== 75 || that.model.attributes.secret_unlocked === true || that.model.attributes.secret_opt_out === true)) {
 						if (that.model.attributes.fed_cap >= 25) {
 							if (Math.floor(Math.random()*4) === 1) {
 								wormAttack();
@@ -64,7 +64,7 @@ $(document).ready(function(){
 						if (that.model.attributes.fed_cap === 0) {
 							unlockFlower();
 						}
-					} else if (level >=3 && that.model.attributes.fed_cap === 75 && that.model.attributes.secret_unlocked === false && that.model.attributes.secret_opt_out === false) {
+					} else if (level >=2 && that.model.attributes.fed_cap === 75 && that.model.attributes.secret_unlocked === false && that.model.attributes.secret_opt_out === false) {
 						that.openSecretsModal();
 					} 
 					calcWin();
@@ -109,18 +109,20 @@ $(document).ready(function(){
 						that.model.save({alive: false});
 
 						$('#game-display').hide();
-						$('body').append('<div id="worm-game-container">'+
+						$('body').append('<div class="pure-g">'+
+							'<div class="pure-u-21-24" id="worm-game-container">'+
 							'<h2>Alas, your flower was attacked by a malicious worm. To bring it back to good health, you must collect celestial energy. Click on a glowing orb before it flickers out, and drag it to the moon for safekeeping. Fifteen orbs will save your flower!</h2>' +
-							'<h3>Hint: The longer you wait, the faster the orbs will move.</h3>' +
+							'<h2>Hint: The longer you wait, the faster the orbs will move.</h2>' +
 							'<img id="dark-tree" src="/assets/tree.png" style="display: none">' +
 							'<img id="flower" src="/assets/flowerswhite.jpg" style="display: none">' +
 						'<canvas id="topLayer"></canvas>' +
+						'</div>'+
 						'</div>')
 
 							var canvas = document.getElementById('topLayer');
 							var ctx = canvas.getContext('2d');
 
-							canvas.width = $(window).width();
+							canvas.width = $(canvas).width();
 							canvas.height = 600
 
 							var particles = [];
@@ -137,7 +139,7 @@ $(document).ready(function(){
 								this.velY = Math.random()*1
 								this.maxRadius = Math.random()*20
 
-								this.maxLife = 20;
+								this.maxLife = 25;
 								this.life = 0;
 
 								this.draw = function(){
@@ -302,7 +304,7 @@ $(document).ready(function(){
 			var flowerColors = ["red", "rgba(241, 241, 34, 0.66)", "blue", "purple", "#F1DADA", "rgba(212, 131, 212, 0.82)", "rgba(18, 88, 156, 0.82)", "pink", "yellow", "lightblue"]
 			var flowerCenters = ["black", "yellow", "purple", "pink", "lightblue", "white", "red", "gray", "purple"]
 
-			for (i=1; i<=$('.card').length; i++){
+			for (i=1; i<=flowers.length; i++){
 				document.cookie="moreHunger=0";
 				var moreHunger = 0;
 
@@ -313,49 +315,53 @@ $(document).ready(function(){
 				flowerCenters.splice(flowerCenters.indexOf(flowerCenter), 1);
 
 				var flowerHtml = '<svg width="200" height="200">' +
-				'<ellipse cx="100" cy="70" rx="25" ry="30" style="fill:' + flowerColor + '"/>' +
-				'<ellipse cx="130" cy="100" rx="30" ry="25" style="fill:' + flowerColor + '"/>' +
-				'<ellipse cx="100" cy="130" rx="25" ry="30" style="fill:' + flowerColor + '"/>' +
-				'<ellipse cx="70" cy="100" rx="30" ry="25" style="fill:' + flowerColor + '"/>' +
-				'<circle cx="100" cy="100" r="18" stroke="white" stroke-width="4" fill=' + flowerCenter +'/>' + 
+				'<ellipse cx="90" cy="70" rx="25" ry="30" style="fill:' + flowerColor + '"/>' +
+				'<ellipse cx="120" cy="100" rx="30" ry="25" style="fill:' + flowerColor + '"/>' +
+				'<ellipse cx="90" cy="130" rx="25" ry="30" style="fill:' + flowerColor + '"/>' +
+				'<ellipse cx="60" cy="100" rx="30" ry="25" style="fill:' + flowerColor + '"/>' +
+				'<circle cx="90" cy="100" r="18" stroke="white" stroke-width="4" fill=' + flowerCenter +'/>' + 
 				'</svg>';
 				this.$('#card-' + i).html('').append(flowerHtml);
 
+				var flowerName = this.model.attributes.name;
+				console.log(flowerName);
+
 				this.$('#card-' + i).click(function(){ // working here
+					
 					var flower = flowers[Math.floor(Math.random()*flowers.length)];
 					flowers.splice(flowers.indexOf(flower), 1);
 
-					if (this.model.attributes.name === flower) {
-						alert('congratulations you picked' + flower + '. tell' + flower + 'your secret in the box at the bottom.')
+					var imageName = "";
+					if (flower === "Wild Iris") {
+						imageName = "iris"
+					} else if (flower === "Red Poppy") {
+						imageName = "poppy"
+					} else if (flower === "Lamium"){
+						imageName = "lamium"
+					} else if (flower === "Snowdrops") {
+						imageName = "snowdrops"
+					} else if (flower === "The White Rose") {
+						imageName = "rose"
+					} else if (flower === "Violets") {
+						imageName = "violets"
+					} else if (flower === "Trillium") {
+						imageName = "trillium"
+					} else if (flower === "Matins") {
+						imageName = "matins"
+					} else if (flower === "Witchgrass") {
+						imageName = "witchgrass"
+					}
+
+					if (flowerName === flower) {
+						alert('Congratulations you picked ' + flower + '. Tell ' + flower + ' your secret in the box at the bottom.')
 						this.$('.secrets-input-box').toggle();
 					} else {
-						var imageName = "";
-						if (flower === "Wild Iris") {
-							imageName = "iris"
-						} else if (flower === "Red Poppy") {
-							imageName = "poppy"
-						} else if (flower === "Lamium"){
-							imageName = "lamium"
-						} else if (flower === "Snowdrops") {
-							imageName = "snowdrops"
-						} else if (flower === "The White Rose") {
-							imageName = "rose"
-						} else if (flower === "Violets") {
-							imageName = "violets"
-						} else if (flower === "Trillium") {
-							imageName = "trillium"
-						} else if (flower === "Matins") {
-							imageName = "matins"
-						} else if (flower === "Witchgrass") {
-							imageName = "witchgrass"
-						}
+						this.$('#card-' + i).html('');
+						this.$('#card-' + i).css({"background-image": "url('/assets/" + imageName + ".png')", "background-position": "cover"})
 
-						this.$('#card-' + i).html('')
-						this.$('#card-' + i).css({"background-image": url('/assets/' + imageName + '.png')})
-						alert('sorry you picked ' + flower + '. you are looking for ' + this.model.attributes.name + '!')//change this alert to something else
+						alert('Sorry you picked ' + flower + '. You are looking for ' + flowerName + '!')
 						moreHunger += 25;
 						document.cookie="moreHunger=" + moreHunger; 
-						//do something here to change the image to the flower
 					}
 				}.bind(this))
 			}
@@ -391,7 +397,7 @@ $(document).ready(function(){
 		}
 	})
 
-	App.Views.PurgatoryFlowersView = Backbone.View.extend({ //working here!!!!!!!
+	App.Views.PurgatoryFlowersView = Backbone.View.extend({
 		el: '#grass-flowers-container',
 		initialize: function(){
 			this.collection.fetch();
@@ -471,8 +477,46 @@ $(document).ready(function(){
 			this.$el.html('');
 
 			this.collection.each(function(flower){
-				if (flower.attributes.secret_unlocked === true) {
+				if (flower.attributes.poem_type === "flower" && flower.attributes.secret_unlocked === true) {
 					this.$el.append(new App.Views.SecretsBoxView({model: flower}).render().$el);					
+				}
+			}.bind(this))
+		}
+	})
+
+	App.Views.ExtraPoemView = Backbone.View.extend({
+		template: Handlebars.compile($('#garden-poems-template').html()),
+		events: {
+			'click .read-button': 'read',
+			'click .close-modal': 'closeModal'
+		},
+		render: function(){
+			this.$el.html(this.template({flower: this.model.toJSON()}));	
+			return this
+		},
+		read: function(){
+			console.log("clicking")
+			this.$('.poem-modal').toggle();
+			this.$('.modal-overlay').toggle();				
+		},
+		closeModal: function(){
+			this.$('.poem-modal').toggle();
+			this.$('.modal-overlay').toggle();
+		}
+	})
+
+	App.Views.ExtraPoemsView = Backbone.View.extend({
+		el: '#earth-box',
+		initialize: function(){
+			this.collection.fetch();
+			this.listenTo(this.collection, 'sync remove', this.render)
+		},
+		render: function(){
+			this.$el.html('');
+
+			this.collection.each(function(flower){
+				if (flower.attributes.poem_type === "landscape"){
+					this.$el.append(new App.Views.ExtraPoemView({model: flower}).render().$el);	
 				}
 			}.bind(this))
 		}
@@ -492,10 +536,12 @@ $(document).ready(function(){
 			$('#rainwater-container').empty();
 			$('#grass-flowers-container').empty();
 			$('#dirt-flowers-container').empty();
+			$('#earth-box').empty();
 			var flowers = new App.Collections.Flowers();
 			var purgatoryFlowersView = new App.Views.PurgatoryFlowersView({collection: flowers});
 			var hellFlowersView = new App.Views.HellFlowersView({collection: flowers});
-			var secretsBoxesView = new App.Views.SecretsBoxesView({collection: flowers});			
+			var secretsBoxesView = new App.Views.SecretsBoxesView({collection: flowers});	
+			var extraPoemsView = new App.Views.ExtraPoemsView({collection: flowers});			
 		}
 	})
 
