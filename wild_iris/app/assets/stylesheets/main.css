@@ -5,7 +5,6 @@ html, body{
 body{
   	position: relative;
   	margin: 0px 300px;
-/*  	background-color: rgba(233, 244, 247, 0.21);*/
   }
 
 * {
@@ -50,6 +49,13 @@ span {
 	color: black;
 }
 
+#instructions-container{
+	width: 70%;
+	margin: 20px auto;
+	padding: 20px;
+	font-size: 1.3em;
+}
+
 #game-display {
 	margin: 0;
 	padding: 0;
@@ -72,7 +78,7 @@ span {
 	float: left;
 	position: relative;
 	left: 80px;
-	top: -10px;
+	top: -10;
 	height: 680px;
 	width: 700px;
 }
@@ -222,9 +228,6 @@ span {
 
 .submit-secrets-button{
 	float: left;
-}
-
-.poem-modal {
 }
 
 .close-secrets-modal, .close-modal {

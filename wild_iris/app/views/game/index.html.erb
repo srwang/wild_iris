@@ -3,16 +3,30 @@
 <head>
 	<title>Wild Iris Game</title>
 	<link href='http://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+	<%= include_gon(:init => true) %>
 </head>
 <body>
 	<header>
 		<div id="header-inner-box">
 			<h1><span>the</span> WILD IRIS (GAME)</h1>
-			<a href="">Instructions</a>
-			<a href="">About "The Wild Iris"</a>
-			<a href="">Play Game</a>
+			<a href="/#instructions">Instructions</a>
+			<a href="/#about">About "The Wild Iris"</a>
+			<a href="/#game">Game</a>
 		</div>
-	</header>	
+	</header>
+
+	<div id="instructions-container">
+		<h1>Instructions</h1>
+		
+		<ul>
+			<li>Click on a flower to alleviate its hunger. A no-longer-hungry flower will offer you its poem...</li>
+			<li>Flowers drink <strong>Rainwater</strong>. If you are running low on rainwater, collect it from the tree.</li>
+			<li>At Level 2, you will have the option to gather the flowers' secrets. When you have all the secrets, you may try your hand at the box at the bottom of the screen.</li>
+			<li>There may be dangerous worms...</li>  
+		</ul>
+
+		<a href="">Start a new game.</a>
+	</div>	
 
 	<div id="game-display">
 
@@ -131,7 +145,7 @@
 		<script type="text/x-handlebars-template" id="rainwater-template">
 			<h2>Rainwater: {{user.rainwater}} Drops</h2>
 			<div id='level-box'>
-				<h3>Unlocked Levels: 1. Feed Flowers</h3>
+				<h3>You have unlocked: 1. Feed Flowers</h3>
 			</div>
 			<div id="tree"></div>
 		</script>

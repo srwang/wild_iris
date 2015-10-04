@@ -111,11 +111,11 @@ $(document).ready(function(){
 						$('#game-display').hide();
 						$('body').append('<div class="pure-g">'+
 							'<div class="pure-u-21-24" id="worm-game-container">'+
-							'<h2>Alas, your flower was attacked by a malicious worm. To bring it back to good health, you must collect celestial energy. Click on a glowing orb before it flickers out, and drag it to the moon for safekeeping. Fifteen orbs will save your flower!</h2>' +
-							'<h2>Hint: The longer you wait, the faster the orbs will move.</h2>' +
-							'<img id="dark-tree" src="/assets/tree.png" style="display: none">' +
 							'<img id="flower" src="/assets/flowerswhite.jpg" style="display: none">' +
-						'<canvas id="topLayer"></canvas>' +
+							'<canvas id="topLayer"></canvas>' +
+							'<h3>Alas, your flower was attacked by a malicious worm. To bring it back to good health, you must collect celestial energy. Click on a glowing orb before it flickers out, and drag it to the moon for safekeeping. Fifteen orbs will save your flower!</h3>' +
+							'<h3>Hint: The longer you wait, the faster the orbs will move.</h3>' +
+							'<img id="dark-tree" src="/assets/tree.png" style="display: none">' +
 						'</div>'+
 						'</div>')
 
@@ -139,10 +139,14 @@ $(document).ready(function(){
 								this.velY = Math.random()*1
 								this.maxRadius = Math.random()*20
 
-								this.maxLife = 25;
+								this.maxLife = 30;
 								this.life = 0;
 
 								this.draw = function(){
+									if (this.maxLife >= 15) {
+										this.maxLife -= 0.3;				
+									}
+
 									this.x += this.velX;
 									this.y += this.velY;
 
@@ -415,7 +419,7 @@ $(document).ready(function(){
 			}
 
 			this.collection.each(function(flower){
-				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "purgatory") {
+				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "purgatory" && flower.attributes.user_id === gon.user_id) {
 
 					var flowerView = new App.Views.FlowerView({model: flower});
 					this.$el.append(flowerView.render().$el);	
@@ -446,7 +450,7 @@ $(document).ready(function(){
 			}
 
 			this.collection.each(function(flower){
-				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "hell") {
+				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "hell" && flower.attributes.user_id === gon.user_id) {
 
 					var flowerView = new App.Views.FlowerView({model: flower});
 					this.$el.append(flowerView.render().$el);		
@@ -477,7 +481,7 @@ $(document).ready(function(){
 			this.$el.html('');
 
 			this.collection.each(function(flower){
-				if (flower.attributes.poem_type === "flower" && flower.attributes.secret_unlocked === true) {
+				if (flower.attributes.poem_type === "flower" && flower.attributes.secret_unlocked === true && flower.attributes.user_id === gon.user_id) {
 					this.$el.append(new App.Views.SecretsBoxView({model: flower}).render().$el);					
 				}
 			}.bind(this))
@@ -515,7 +519,7 @@ $(document).ready(function(){
 			this.$el.html('');
 
 			this.collection.each(function(flower){
-				if (flower.attributes.poem_type === "landscape"){
+				if (flower.attributes.poem_type === "landscape" && flower.attributes.user_id === gon.user_id){
 					this.$el.append(new App.Views.ExtraPoemView({model: flower}).render().$el);	
 				}
 			}.bind(this))
@@ -524,16 +528,22 @@ $(document).ready(function(){
 
 	App.Routers.FlowerRouter = Backbone.Router.extend({
 		routes: {
-			"": "redirectToMain",
-			"main": "renderMainPage"
+			"": "redirectToInstructions",
+			"instructions": "renderInstructions",
+			"game": "renderGame"
 		},
-		redirectToMain: function() {
-		    flowerRouter.navigate("main", {trigger: true})
+		redirectToInstructions: function() {
+		    flowerRouter.navigate("instructions", {trigger: true})
 		},
-		renderMainPage: function(){
+		renderInstructions: function(){
+			$('#game-display').hide();
+			$('#worm-game-container').remove();
+			$('#instructions-container').show();
+		},
+		renderGame: function(){
+			$('#instructions-container').hide();
 			$('#game-display').show();
 			$('#secrets-box').empty();
-			$('#rainwater-container').empty();
 			$('#grass-flowers-container').empty();
 			$('#dirt-flowers-container').empty();
 			$('#earth-box').empty();

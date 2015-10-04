@@ -27,7 +27,7 @@ gem 'semantic-ui-rails'
 gem 'pure-css-rails', '~> 0.6.0'
 
 # Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt', '~> 3.1.7'
 
 # Use Unicorn as the app server
 # gem 'unicorn'
@@ -46,5 +46,8 @@ group :development, :test do
   gem 'spring'
 
   gem 'pry-rails'
+
+  gem 'gon'
+
 end
 

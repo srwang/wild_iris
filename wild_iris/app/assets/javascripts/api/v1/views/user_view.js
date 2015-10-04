@@ -2,9 +2,6 @@ $(document).ready(function(){
 
 	App.Views.UserView = Backbone.View.extend({
 		template: Handlebars.compile($('#rainwater-template').html()),
-		initialize: function(){
-			this.listenTo(this.model, 'change', this.render);
-		},
 		events: {
 			'click #tree': 'addWater'
 		},
@@ -35,15 +32,18 @@ $(document).ready(function(){
 			this.$el.html('');
 
 			this.collection.each(function(user){
-				var userView = new App.Views.UserView({model: user});
+				if (user.id === gon.user_id) {
+					var userView = new App.Views.UserView({model: user});
 
-				this.$el.append(userView.render().$el);
-				if (user.attributes.level >= 2) {
-					userView.addLevelTwo();
-				} 
-				if (user.attributes.level >= 4){
-					userView.addLevelThree();
+					this.$el.append(userView.render().$el);
+					if (user.attributes.level > 1) {
+						userView.addLevelTwo();
+					} 
+					if (user.attributes.level > 3){
+						userView.addLevelThree();
+					}					
 				}
+
 			}.bind(this))
 
 		}
