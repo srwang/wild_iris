@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20150916164543) do
     t.string   "password_digest"
     t.integer  "level"
     t.integer  "rainwater"
+    t.boolean  "allunlocked"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end

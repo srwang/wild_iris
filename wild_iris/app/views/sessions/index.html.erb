@@ -2,32 +2,31 @@
 <html>
 	<head>
 	</head>
-	<body>
-		<p style="color: red"><%= flash[:error] %></p>
+	<body id="log-in-body">
+		<div class="pure-u">
+			<div class="pure-g-2-3" id="log-in-container">
+				<h1>WILD IRIS GAME</h1>
+				<p style="color: red"><%= flash[:error] %></p>
 
-		<div id="log-in-box">
-			<%= form_tag "/sessions" do  %>
-			<%= text_field_tag :username,nil, placeholder: "Username" %>
-			<%= password_field_tag :password, nil, placeholder: "Password" %>
-			<%= submit_tag "Log In" %>
-			 <% end %>
-		</div>
+				<div id="log-in-box">
+					<%= form_tag "/sessions" do  %>
+					<%= text_field_tag :username,nil, placeholder: "Username" %><br>
+					<%= password_field_tag :password, nil, placeholder: "Password" %><br>
+					<%= submit_tag "Log In" %>
+					 <% end %>
+				</div>
 
-		<p style="color: red"><%= flash[:error_two] %></p>
+				<p style="color: red"><%= flash[:error_two] %></p>
 
-		<div id="sign-up-box">
-			<%= form_tag("/sessions/new", method: "get") do  %>
-			<%= text_field_tag :username, nil, placeholder: "Username" %>
-			<%= password_field_tag :password, nil, placeholder: "Password" %>
-			<%= password_field_tag :password_confirmation, nil, placeholder: "Confirm Password" %>
-			<%= submit_tag "Sign Up" %>
-			 <% end %>
-		</div>
-
-		<div id="log-out-box">
-			<%= form_tag(session_path(1), method: "delete") do %>
-			<%= submit_tag "Log Out" %>
-			<% end %>
+				<div id="sign-up-box">
+					<%= form_tag("/sessions/new", method: "get") do  %>
+					<%= text_field_tag :username, nil, placeholder: "Username" %><br>
+					<%= password_field_tag :password, nil, placeholder: "Password" %><br>
+					<%= password_field_tag :password_confirmation, nil, placeholder: "Confirm Password" %><br>
+					<%= submit_tag "Sign Up" %>
+					 <% end %>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

@@ -49,8 +49,101 @@ $(document).ready(function(){
 		}
 	})
 
+	App.Views.InstructionView = Backbone.View.extend({
+		template: Handlebars.compile($('#instructions-template').html()),
+		events: {
+			'click #new-game-button': 'startNewGame'
+		},
+		render: function(){
+			this.$el.html(this.template({user: this.model.toJSON()}));
+			return this
+		},
+		startNewGame: function(){
+			console.log('clicked')
+			this.model.save({level: 1, rainwater: 300})
+
+			document.cookie="allUnlocked=false"
+
+			var poppy = new App.Models.Flower({"byuser": "byuser/" + this.model.attributes.id + "/Red Poppy"});
+			poppy.getByProperty("byuser");
+			poppy.fetch({
+				success: function(model, res, error){
+					model.save({alive: true, fed_cap: 100, unlocked: false, secret_unlocked: false, secret_opt_out: false})
+				}
+			})
+
+			var iris = new App.Models.Flower({"byuser": "byuser/" + this.model.attributes.id + "/Wild Iris"});
+			iris.getByProperty("byuser");
+			iris.fetch({
+				success: function(model, res, error){
+					model.save({alive: true, fed_cap: 150, unlocked: false, secret_unlocked: false, secret_opt_out: false})
+				}
+			})
+
+			var lamium = new App.Models.Flower({"byuser": "byuser/" + this.model.attributes.id + "/Lamium"});
+			lamium.getByProperty("byuser");
+			lamium.fetch({
+				success: function(model, res, error){
+					model.save({alive: true, fed_cap: 100, unlocked: false, secret_unlocked: false, secret_opt_out: false})
+				}
+			})
+
+			var snowdrops = new App.Models.Flower({"byuser": "byuser/" + this.model.attributes.id + "/Snowdrops"});
+			snowdrops.getByProperty("byuser");
+			snowdrops.fetch({
+				success: function(model, res, error){
+					model.save({alive: true, fed_cap: 125, unlocked: false, secret_unlocked: false, secret_opt_out: false})
+				}
+			})
+
+			var rose = new App.Models.Flower({"byuser": "byuser/" + this.model.attributes.id + "/The White Rose"});
+			rose.getByProperty("byuser");
+			rose.fetch({
+				success: function(model, res, error){
+					model.save({alive: true, fed_cap: 175, unlocked: false, secret_unlocked: false, secret_opt_out: false})
+				}
+			})
+
+			var violets = new App.Models.Flower({"byuser": "byuser/" + this.model.attributes.id + "/Violets"});
+			violets.getByProperty("byuser");
+			violets.fetch({
+				success: function(model, res, error){
+					model.save({alive: true, fed_cap: 75, unlocked: false, secret_unlocked: false, secret_opt_out: false})
+				}
+			})
+
+			var trillium = new App.Models.Flower({"byuser": "byuser/" + this.model.attributes.id + "/Trillium"});
+			trillium.getByProperty("byuser");
+			trillium.fetch({
+				success: function(model, res, error){
+					model.save({alive: true, fed_cap: 200, unlocked: false, secret_unlocked: false, secret_opt_out: false})
+				}
+			})
+
+			window.location.href = "/#game"
+		}
+	})
+
+	App.Views.InstructionsView = Backbone.View.extend({
+		el: '#instructions-container',
+		initialize: function(){
+			this.collection.fetch();
+			this.listenTo(this.collection, 'sync remove change', this.render)
+		},
+		render: function(){
+			this.$el.html('');
+
+			this.collection.each(function(user){
+				if (user.id === gon.user_id){
+					this.$el.append(new App.Views.InstructionView({model: user}).render().$el);
+				}
+			}.bind(this))
+		}
+	})
+
 	var users = new App.Collections.Users();
 	var usersView = new App.Views.UsersView({collection: users});
+	var instructionsView = new App.Views.InstructionsView({collection: users});
 
 	
 })

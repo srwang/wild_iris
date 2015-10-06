@@ -5,6 +5,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :password_digest
       t.integer :level
       t.integer :rainwater
+      t.boolean :allunlocked
 
       t.timestamps null: false
     end

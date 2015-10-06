@@ -12,6 +12,7 @@ $(document).ready(function(){
 			alert('Sorry, please collect all the secrets.')
 		}
 	})
+
 })
 
 //noises voice lost presence capitulation winter permit glinting

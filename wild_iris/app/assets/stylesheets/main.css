@@ -23,6 +23,32 @@ body{
 	height: 0;
  }
 
+#log-in-container {
+	position: relative;
+	left: 150%;
+	top: 50px;
+	margin: 0 auto;
+	padding: 50px;
+	background-color: white;
+	border: 1px solid purple;
+}
+
+#log-in-container input {
+ 	padding: 5px;
+ 	margin: 5px;
+ 	border: 2px solid #F5E6E8;
+}
+
+#sign-up-box, #log-in-box {
+	background-color: lightgray;
+	padding: 15px;
+}
+
+#log-in-body {
+	background-image: url('http://wallpoop.com/wp-content/uploads/2013/03/wallpaper-crocus-flower-buds-violet-primrose-snow-spring-flowers.jpg');
+	background-size: cover;
+}
+
 header {	
 	text-align: center;
 	margin: 0 auto;
@@ -30,8 +56,6 @@ header {
 	width: 100%;
 	background-color: rgba(186, 186, 220, 0.6);
 	background-image: url('http://www.scri8e.com/stars/PNG_Clouds/zc06.png?filename=./zc06.png&w0=800&h0=289&imgType=3&h1=50&w1=140');
-	/*background-image: url('http://wallpoop.com/wp-content/uploads/2013/03/wallpaper-crocus-flower-buds-violet-primrose-snow-spring-flowers.jpg');
-	background-position: right top;*/
 }
 
 header h1 {
@@ -49,11 +73,34 @@ span {
 	color: black;
 }
 
+#log-out-box input {
+	position: absolute;
+	top: 1.5%;
+	right: 1.5%;
+	font-size: 1.5em;
+	float: right;
+	border-radius: 5%;
+	border: 2px aliceblue solid;
+	background-color: rgba(173, 216, 230, 0.27);
+	color: darkblue;
+	padding: 10px;
+
+}
+
 #instructions-container{
 	width: 70%;
 	margin: 20px auto;
 	padding: 20px;
 	font-size: 1.3em;
+}
+
+#new-game-button {
+	margin: 0px auto;
+	border-radius: 5%;
+	border: 2px pink solid;
+	padding: 10px;
+	background-color: pink;
+	color: red;
 }
 
 #game-display {
@@ -91,7 +138,7 @@ span {
 #secrets-box-container {
 	float: right;
 	position: relative;
-	right: 8%;
+	right: 2%;
 	border: 2px gray solid;
 	padding: 20px;
 }

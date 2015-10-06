@@ -9,7 +9,7 @@ $(document).ready(function(){
 			'click .secrets-game-button': 'openSecretsModal',
 			'click .open-secrets-modal': 'openSecrectsModal',
 			'click .close-secrets-modal': 'closeSecretsModal',
-			'click .submit-secrets-button': 'calcSecretStrength'
+			'click .submit-secrets-button': 'calcSecretStrength',
 		},
 		render: function(){
 			this.$el.html(this.template({flower: this.model.toJSON()}));	
@@ -34,8 +34,6 @@ $(document).ready(function(){
 			user.fetch({
 				success: function(res){ 
 					level = res.attributes.level
-					console.log(level)
-					console.log(that.model.attributes.fed_cap, that.model.attributes.secret_unlocked, that.model.attributes.secret_opt_out)
 
 					if (that.model.attributes.alive === false) {
 						wormAttack();
@@ -70,16 +68,26 @@ $(document).ready(function(){
 					calcWin();
 
 					function calcWin(){
-						var allFlowers = that.model.collection.models;
-						var allUnlocked = true;
-						for (i=0; i<allFlowers.length; i++){
-							if (allFlowers[i].attributes.unlocked === false) {
-								allUnlocked = false;
+						console.log('calcing')
+						var allFlowers = new App.Models.Flower({"byuser": "byuser/" + that.model.attributes.user_id});
+						allFlowers.getByProperty("byuser");
+						allFlowers.fetch({
+							success: function(model){
+								var allUnlocked = true;
+
+								for (i=0; i<12; i++){
+									if (model.attributes[i].unlocked === false){
+										allUnlocked = false;
+									}
+								}
+								console.log(allUnlocked)
+								if (allUnlocked === true){
+									document.cookie="allUnlocked=true";
+									that.model.collection.trigger('change');
+									alert('Congrats, you have unlocked all of the flowers! You have the chance to go back and unlock all of their secrets.')
+								}
 							}
-						}
-						if (allUnlocked === true){
-							alert('Congrats, you have unlocked all of the flowers! You have the chance to go back and unlock all of their secrets.')
-						}
+						})
 					}
 
 					function calcWaterDrops (){
@@ -113,7 +121,7 @@ $(document).ready(function(){
 							'<div class="pure-u-21-24" id="worm-game-container">'+
 							'<img id="flower" src="/assets/flowerswhite.jpg" style="display: none">' +
 							'<canvas id="topLayer"></canvas>' +
-							'<h3>Alas, your flower was attacked by a malicious worm. To bring it back to good health, you must collect celestial energy. Click on a glowing orb before it flickers out, and drag it to the moon for safekeeping. Fifteen orbs will save your flower!</h3>' +
+							'<h3>Alas, your flower was attacked by a malicious worm. To bring it back to good health, you must collect celestial energy. Click on a glowing orb before it flickers out, and drag it to the moon for safekeeping. Ten orbs will save your flower!</h3>' +
 							'<h3>Hint: The longer you wait, the faster the orbs will move.</h3>' +
 							'<img id="dark-tree" src="/assets/tree.png" style="display: none">' +
 						'</div>'+
@@ -290,7 +298,7 @@ $(document).ready(function(){
 									var newParticle = new inPlaceParticle();
 									inPlaceParticles.push(newParticle);
 
-									if (inPlaceParticles.length === 15) {
+									if (inPlaceParticles.length === 10) {
 									  alert('Congratulations, you have saved the life of your flower!')
 									  $('#worm-game-container').remove();
 									  $('#game-display').show();
@@ -380,8 +388,8 @@ $(document).ready(function(){
 				this.model.save({secret_opt_out: true});
 			}
 
-			var moreHunger = document.cookie.split('=');
-			moreHunger = parseInt(moreHunger[1])
+			var moreHunger = parseInt(readCookie('moreHunger'))
+			console.log(moreHunger)
 			newHunger = this.model.attributes.fed_cap + moreHunger
 			this.model.save({fed_cap: newHunger})
 		},
@@ -394,8 +402,9 @@ $(document).ready(function(){
 				alert('congratulations you collected ' + this.model.attributes.name + '\'s secret :) check in your secrets box.')
 				this.model.save({fed_cap: this.model.attributes.fed_cap - 25, secret_unlocked: true})
 			}
-			var moreHunger = document.cookie.split('=');
-			moreHunger = parseInt(moreHunger[1]);
+
+			var moreHunger = parseInt(readCookie('moreHunger'));
+			console.log(moreHunger)
 			newHunger = this.model.attributes.fed_cap + moreHunger;
 			this.model.save({fed_cap: newHunger});
 		}
@@ -405,30 +414,25 @@ $(document).ready(function(){
 		el: '#grass-flowers-container',
 		initialize: function(){
 			this.collection.fetch();
-			this.listenTo(this.collection, 'sync remove', this.render)
+			this.listenTo(this.collection, 'sync change remove', this.render)
 		},
 		render: function(){
 			this.$el.html('');
 
-			var allFlowers = this.collection.models;
-			var allUnlocked = true;
-			for (i=0; i<allFlowers.length; i++){
-				if (allFlowers[i].attributes.unlocked === false) {
-					allUnlocked = false;
-				}
-			}
+			console.log(document.cookie)
+			var allUnlocked = readCookie('allUnlocked');
 
 			this.collection.each(function(flower){
 				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "purgatory" && flower.attributes.user_id === gon.user_id) {
 
 					var flowerView = new App.Views.FlowerView({model: flower});
 					this.$el.append(flowerView.render().$el);	
-					if (allUnlocked === true){					
+					console.log(document.cookie)
+					if (allUnlocked === "true"){					
 						flowerView.openSecretButtons();
 					}
-
 				}
-			}.bind(this))
+			}.bind(this))				
 		}
 	})
 
@@ -436,28 +440,22 @@ $(document).ready(function(){
 		el: '#dirt-flowers-container',
 		initialize: function(){
 			this.collection.fetch();
-			this.listenTo(this.collection, 'sync remove', this.render)
+			this.listenTo(this.collection, 'sync change remove', this.render)
 		},
 		render: function(){
 			this.$el.html('');
 
-			var allFlowers = this.collection.models;
-			var allUnlocked = true;
-			for (i=0; i<allFlowers.length; i++){
-				if (allFlowers[i].attributes.unlocked === false) {
-					allUnlocked = false;
-				}
-			}
+			var allUnlocked = readCookie('allUnlocked');
+			console.log(document.cookie)
 
 			this.collection.each(function(flower){
 				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "hell" && flower.attributes.user_id === gon.user_id) {
 
 					var flowerView = new App.Views.FlowerView({model: flower});
 					this.$el.append(flowerView.render().$el);		
-					if (allUnlocked === true){					
+					if (allUnlocked === "true"){		
 						flowerView.openSecretButtons();
 					}				
-
 				}
 			}.bind(this))
 		}
@@ -557,5 +555,16 @@ $(document).ready(function(){
 
 	var flowerRouter = new App.Routers.FlowerRouter();
 	Backbone.history.start();
+
+	function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
 
 })

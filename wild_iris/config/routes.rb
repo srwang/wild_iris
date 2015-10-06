@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
       resources :flowers
+      get '/flowers/byuser/:user_id' => 'flowers#byuserindex'
+      get '/flowers/byuser/:user_id/:flower_name' => 'flowers#byusershow'
+      put '/flowers/byuser/:user_id/:flower_name' => 'flowers#byuserupdate'
     end
   end
 
