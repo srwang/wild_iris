@@ -10,9 +10,9 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require soundcloud
 //= require jquery
 //= require jquery_ujs
-//= require semantic-ui
 //= require handlebars
 //= require underscore
 //= require backbone

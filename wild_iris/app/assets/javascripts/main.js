@@ -13,6 +13,17 @@ $(document).ready(function(){
 		}
 	})
 
+	$.get("http://ipinfo.io/", function(response) {
+	    var city = response.city
+	    var region = response.region 
+
+	    $.get('http://api.wunderground.com/api/4b6e233436935f0e/conditions/q/' + region + '/' + city + '.json', function(response){
+	    	var weather = response.current_observation.weather
+
+	    	$('#music-box').append("<p>Skies are " + weather.toLowerCase() + " in " + city + ", " + region + "</p>")
+	    })
+	}, "jsonp");
+
 })
 
 //noises voice lost presence capitulation winter permit glinting

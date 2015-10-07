@@ -58,6 +58,20 @@ $(document).ready(function(){
 			this.$el.html(this.template({user: this.model.toJSON()}));
 			return this
 		},
+		checkRain: function(){
+			// $.get("http://ipinfo.io/", function(response) {
+			//     console.log(response.city, response.region);
+
+			//     $.get('http://api.wunderground.com/api/4b6e233436935f0e/conditions/q/' + response.region + '/' + response.city + '.json', function(response){
+			//     	var weather = response.current_observation.weather
+
+			//     	if (/Rain/.test(weather)) {
+			//     		alert("It's raining where you are! You begin with 5000 rainwater points.")
+			//     		this.model.save({rainwater: 5000})
+			//     	} 
+			//     })
+			// }, "jsonp");
+		},
 		startNewGame: function(){
 			console.log('clicked')
 			this.model.save({level: 1, rainwater: 300})
@@ -135,7 +149,9 @@ $(document).ready(function(){
 
 			this.collection.each(function(user){
 				if (user.id === gon.user_id){
-					this.$el.append(new App.Views.InstructionView({model: user}).render().$el);
+					var instructionView = new App.Views.InstructionView({model: user});
+					this.$el.append(instructionView.render().$el);
+					instructionView.checkRain();
 				}
 			}.bind(this))
 		}

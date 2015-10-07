@@ -94,6 +94,10 @@ span {
 	font-size: 1.3em;
 }
 
+#instructions-container li {
+	margin-top: 15px;
+}
+
 #new-game-button {
 	margin: 0px auto;
 	border-radius: 5%;
@@ -101,6 +105,11 @@ span {
 	padding: 10px;
 	background-color: pink;
 	color: red;
+}
+
+#about-container {
+	margin: 75px auto;
+	font-size: 1.2em;
 }
 
 #game-display {
@@ -141,6 +150,24 @@ span {
 	right: 2%;
 	border: 2px gray solid;
 	padding: 20px;
+}
+
+.secrets-icon {
+	height: 50px;
+	width: 100px;
+	background-image: url('/assets/envelope.jpg');
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	margin: 5px 0px 5px 20px;
+}
+
+.secrets-text {
+	display: none;
+}
+
+.close-secrets-text {
+	float: right;
 }
 
 #grass-flowers-container {
@@ -215,7 +242,7 @@ span {
 /*matins 1*/
 #hidden-3 {
 	position: absolute;
-	left: 90%;
+	left: 80%;
 	top: 50px;
 }
 

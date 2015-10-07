@@ -20,23 +20,33 @@
 		</div>
 	</header>
 
+
 	<div id="instructions-container">
 	</div>	
 
 	<script type="text/x-handlebars-template" id="instructions-template">
 		<h1>Instructions</h1>
-		<ul>
+		<ol>
 			<li>Click on a flower to alleviate its hunger. A no-longer-hungry flower will offer you its poem...</li>
 			<li>Flowers drink <strong>Rainwater</strong>. If you are running low on rainwater, collect it from the tree.</li>
-			<li>At Level 2, you will have the option to gather the flowers secrets. When you have all the secrets, you may try your hand at the box at the bottom of the screen.</li>
-			<li>At Level 3, watch out for dangerous worms...</li> 
+			<li>Beginning from <strong>Level 2</strong>, you will have the option to gather the flowers' secrets. Don't worry if you don't collect them on the first try... you'll have a chance to go back to collect secrets after unlocking all the flowers. When you have all the secrets, try your hand at the box on the bottom of the screen!</li>
+			<li>At <strong>Level 3</strong>, watch out for dangerous worms...</li> 
 			<li>Your game will automatically be saved. To reset, Start a New Game:</li> 
-		</ul>
+		</ol>
 
 		<button id="new-game-button">START A NEW GAME</button>
 	</script>
 
+	<div class="pure-g">
+		<div class="pure-u-2-3" id="about-container">
+			<h3>The Wild Iris game was inspired by Louise Glück's poetry collection <a href="http://www.amazon.com/Wild-Iris-Louise-Gluck/dp/0880013346/ref=sr_1_1?ie=UTF8&qid=1444183509&sr=8-1&keywords=the+wild+iris" onclick="window.open(this.href); return false;" onkeypress="window.open(this.href); return false;">The Wild Iris</a>, in which many of the poems are from the perspectives of flowers. Reading the book has always felt like taking a deep dive into a world of other-wordly yet ultra-earthly voices, and I tried to recreate that experience in an interactive, digital form. I hope you enjoy exploring the "garden"!</h3>
+		</div>
+	</div>
+
 	<div id="game-display">
+<!-- 		<div class="clearfix" id="music-box">
+			<iframe width="300px" height="50px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/28344808&amp;auto_play=true&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe><br>
+		</div> -->
 
 		<div id="secrets-box-container">
 			<h2>Collected Secrets</h2>
@@ -65,7 +75,11 @@
 		</footer>
 
 		<script type="text/x-handlebars-template" id="secrets-box-template">
-			<h3>{{flower.secret}} -{{flower.name}}</h3>
+			<div class="secrets-icon"></div>
+			<div class="secrets-text">
+				<button class="close-secrets-text">X</button>
+				<h3>{{flower.secret}} -{{flower.name}}</h3>
+			</div>
 		</script>
 
 		<script type="text/x-handlebars-template" id="flower-template">

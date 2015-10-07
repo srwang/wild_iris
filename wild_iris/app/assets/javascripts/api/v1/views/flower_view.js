@@ -9,7 +9,7 @@ $(document).ready(function(){
 			'click .secrets-game-button': 'openSecretsModal',
 			'click .open-secrets-modal': 'openSecrectsModal',
 			'click .close-secrets-modal': 'closeSecretsModal',
-			'click .submit-secrets-button': 'calcSecretStrength',
+			'click .submit-secrets-button': 'calcSecretStrength'
 		},
 		render: function(){
 			this.$el.html(this.template({flower: this.model.toJSON()}));	
@@ -65,23 +65,22 @@ $(document).ready(function(){
 					} else if (level >=2 && that.model.attributes.fed_cap === 75 && that.model.attributes.secret_unlocked === false && that.model.attributes.secret_opt_out === false) {
 						that.openSecretsModal();
 					} 
-					calcWin();
 
 					function calcWin(){
-						console.log('calcing')
 						var allFlowers = new App.Models.Flower({"byuser": "byuser/" + that.model.attributes.user_id});
 						allFlowers.getByProperty("byuser");
 						allFlowers.fetch({
 							success: function(model){
-								var allUnlocked = true;
+								var allUnlocked = 0;
 
-								for (i=0; i<12; i++){
-									if (model.attributes[i].unlocked === false){
-										allUnlocked = false;
+								for (i=0; i<=11; i++){
+									if (model.attributes[i].unlocked === true){
+										allUnlocked++;
 									}
 								}
 								console.log(allUnlocked)
-								if (allUnlocked === true){
+								console.log(level)
+								if (level === 6 && allUnlocked >= 11){
 									document.cookie="allUnlocked=true";
 									that.model.collection.trigger('change');
 									alert('Congrats, you have unlocked all of the flowers! You have the chance to go back and unlock all of their secrets.')
@@ -108,9 +107,11 @@ $(document).ready(function(){
 					}
 
 					function unlockFlower (){
-						that.model.save({unlocked: true});
-						res.set({level: level + 1})
+						that.model.set({unlocked: true});
+						that.model.save();
+						res.set({level: res.attributes.level + 1})
 						res.save();
+						calcWin();
 					}
 
 					function wormAttack (){
@@ -124,6 +125,7 @@ $(document).ready(function(){
 							'<h3>Alas, your flower was attacked by a malicious worm. To bring it back to good health, you must collect celestial energy. Click on a glowing orb before it flickers out, and drag it to the moon for safekeeping. Ten orbs will save your flower!</h3>' +
 							'<h3>Hint: The longer you wait, the faster the orbs will move.</h3>' +
 							'<img id="dark-tree" src="/assets/tree.png" style="display: none">' +
+							'<img id="night-sky" src="/assets/background.bmp" style="display: none">' +
 						'</div>'+
 						'</div>')
 
@@ -183,14 +185,17 @@ $(document).ready(function(){
 								ctx.fillStyle = "rgba(0, 34, 69, 0.4)";
 								ctx.fillRect(0,0, canvas.width, canvas.height);
 
-								var tree = document.getElementById('dark-tree');
-								ctx.drawImage(tree, -100, -100)
+								var nightSky = document.getElementById('night-sky');
+								ctx.drawImage(nightSky, 0, 0)
 
-								var flower = document.getElementById('flower');
-								ctx.drawImage(flower, posX, posY);
-								ctx.drawImage(flower, posX + 300, posY);
-								ctx.drawImage(flower, posX + 600, posY);
-								ctx.drawImage(flower, posX + 900, posY);
+								// var tree = document.getElementById('dark-tree');
+								// ctx.drawImage(tree, -100, -100)
+
+								// var flower = document.getElementById('flower');
+								// ctx.drawImage(flower, posX, posY);
+								// ctx.drawImage(flower, posX + 300, posY);
+								// ctx.drawImage(flower, posX + 600, posY);
+								// ctx.drawImage(flower, posX + 900, posY);
 
 								for(var i=0; i<particleNum; i++){
 								  var particle = new Particle();
@@ -251,7 +256,6 @@ $(document).ready(function(){
 							}
 
 							function myDown(e){
-								console.log('my down')
 								draggedParticles.forEach(function(element){
 									if (e.pageX < element.x + 15 && e.pageX > element.x - 15 && e.pageY < element.y + 15 &&
 									e.pageY > element.y -15){
@@ -264,7 +268,6 @@ $(document).ready(function(){
 
 							function myUp(){
 								canvas.onmousemove = null;
-								console.log(event.pageX, event.pageY)
 							}
 
 							canvas.onmousedown = myDown;
@@ -277,9 +280,6 @@ $(document).ready(function(){
 						function countDraggedParticles () {
 							draggedParticles.forEach(function(element){
 								if (element.x > canvas.width - 145 + canvasLeft && element.x < canvas.width - 55 + canvasLeft && element.y > 50 + canvasTop && element.y < 140 + canvasTop) {
-
-									console.log('you found the moon')
-
 
 									delete draggedParticles[draggedParticles.indexOf(element)];
 									var inPlaceParticle = function () {
@@ -298,7 +298,7 @@ $(document).ready(function(){
 									var newParticle = new inPlaceParticle();
 									inPlaceParticles.push(newParticle);
 
-									if (inPlaceParticles.length === 10) {
+									if (inPlaceParticles.length === 1) {
 									  alert('Congratulations, you have saved the life of your flower!')
 									  $('#worm-game-container').remove();
 									  $('#game-display').show();
@@ -312,7 +312,7 @@ $(document).ready(function(){
 			});
 		},
 		openSecretsModal: function(){
-			var flowers = ["Wild Iris", "Red Poppy", "Lamium", "Snowdrops", "The White Rose", "Violets", "Trillium", "Matins", "Witchgrass"]
+			var flowers = ["Wild Iris", "Red Poppy", "Lamium", "Snowdrops", "The White Rose", "Violets", "Trillium", "Spring Snow", "Witchgrass"]
 			var flowerColors = ["red", "rgba(241, 241, 34, 0.66)", "blue", "purple", "#F1DADA", "rgba(212, 131, 212, 0.82)", "rgba(18, 88, 156, 0.82)", "pink", "yellow", "lightblue"]
 			var flowerCenters = ["black", "yellow", "purple", "pink", "lightblue", "white", "red", "gray", "purple"]
 
@@ -336,8 +336,8 @@ $(document).ready(function(){
 				this.$('#card-' + i).html('').append(flowerHtml);
 
 				var flowerName = this.model.attributes.name;
-				console.log(flowerName);
 
+				var that = this 
 				this.$('#card-' + i).click(function(){ // working here
 					
 					var flower = flowers[Math.floor(Math.random()*flowers.length)];
@@ -358,24 +358,30 @@ $(document).ready(function(){
 						imageName = "violets"
 					} else if (flower === "Trillium") {
 						imageName = "trillium"
-					} else if (flower === "Matins") {
-						imageName = "matins"
+					} else if (flower === "Spring Snow") {
+						imageName = "snow"
 					} else if (flower === "Witchgrass") {
 						imageName = "witchgrass"
 					}
 
 					if (flowerName === flower) {
 						alert('Congratulations you picked ' + flower + '. Tell ' + flower + ' your secret in the box at the bottom.')
-						this.$('.secrets-input-box').toggle();
+						$(this).html('')
+						$(this).css({"background-image": "url('/assets/" + imageName + ".png')", "background-size": "contain", "background-repeat": "no-repeat", "background-position": "center", "background-color": "rgb(224, 188, 195)", "border": "3px yellow solid"});
+
+						that.$('.secrets-input-box').toggle();
 					} else {
-						this.$('#card-' + i).html('');
-						this.$('#card-' + i).css({"background-image": "url('/assets/" + imageName + ".png')", "background-position": "cover"})
+						that.$('#card-' + i).html('');
+						that.$('#card-' + i).css({"background-image": "url('/assets/" + imageName + ".png')", "background-position": "cover"})
 
 						alert('Sorry you picked ' + flower + '. You are looking for ' + flowerName + '!')
+						$(this).html('')
+						$(this).css({"background-image": "url('/assets/" + imageName + ".png')", "background-size": "contain", "background-repeat": "no-repeat", "background-position": "center", "background-color": "lightgray"});
+
 						moreHunger += 25;
 						document.cookie="moreHunger=" + moreHunger; 
 					}
-				}.bind(this))
+				})
 			}
 			this.$('.secrets-game-modal').toggle();
 			this.$('.secrets-modal-overlay').toggle();
@@ -389,12 +395,11 @@ $(document).ready(function(){
 			}
 
 			var moreHunger = parseInt(readCookie('moreHunger'))
-			console.log(moreHunger)
 			newHunger = this.model.attributes.fed_cap + moreHunger
 			this.model.save({fed_cap: newHunger})
 		},
 		calcSecretStrength: function(){
-			var result = Math.floor(Math.random()*3)
+			var result = Math.floor(Math.random()*2)
 			if (result !== 1) {
 				alert('sorry ' + this.model.attributes.name + ' doesn\'t like that secret :(')
 				this.model.save({fed_cap: this.model.attributes.fed_cap + 100})
@@ -404,7 +409,6 @@ $(document).ready(function(){
 			}
 
 			var moreHunger = parseInt(readCookie('moreHunger'));
-			console.log(moreHunger)
 			newHunger = this.model.attributes.fed_cap + moreHunger;
 			this.model.save({fed_cap: newHunger});
 		}
@@ -419,7 +423,6 @@ $(document).ready(function(){
 		render: function(){
 			this.$el.html('');
 
-			console.log(document.cookie)
 			var allUnlocked = readCookie('allUnlocked');
 
 			this.collection.each(function(flower){
@@ -427,7 +430,6 @@ $(document).ready(function(){
 
 					var flowerView = new App.Views.FlowerView({model: flower});
 					this.$el.append(flowerView.render().$el);	
-					console.log(document.cookie)
 					if (allUnlocked === "true"){					
 						flowerView.openSecretButtons();
 					}
@@ -446,7 +448,6 @@ $(document).ready(function(){
 			this.$el.html('');
 
 			var allUnlocked = readCookie('allUnlocked');
-			console.log(document.cookie)
 
 			this.collection.each(function(flower){
 				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "hell" && flower.attributes.user_id === gon.user_id) {
@@ -463,9 +464,21 @@ $(document).ready(function(){
 
 	App.Views.SecretsBoxView = Backbone.View.extend({
 		template: Handlebars.compile($('#secrets-box-template').html()),
+		events: {
+			'click .secrets-icon': 'openSecret',
+			'click .close-secrets-text': 'closeSecret'			
+		},
 		render: function(){
 			this.$el.html(this.template({flower: this.model.toJSON()}));	
 			return this
+		},
+		openSecret: function(){
+			this.$('.secrets-text').toggle();
+			this.$('.secrets-icon').toggle();
+		},
+		closeSecret: function(){
+			this.$('.secrets-text').toggle();
+			this.$('.secrets-icon').toggle();
 		}
 	})
 
@@ -497,7 +510,6 @@ $(document).ready(function(){
 			return this
 		},
 		read: function(){
-			console.log("clicking")
 			this.$('.poem-modal').toggle();
 			this.$('.modal-overlay').toggle();				
 		},
@@ -528,6 +540,7 @@ $(document).ready(function(){
 		routes: {
 			"": "redirectToInstructions",
 			"instructions": "renderInstructions",
+			"about": 'renderAbout',
 			"game": "renderGame"
 		},
 		redirectToInstructions: function() {
@@ -535,11 +548,19 @@ $(document).ready(function(){
 		},
 		renderInstructions: function(){
 			$('#game-display').hide();
+			$('#about-container').hide();
 			$('#worm-game-container').remove();
 			$('#instructions-container').show();
 		},
+		renderAbout: function(){
+			$('#game-display').hide();
+			$('#worm-game-container').remove();
+			$('#instructions-container').hide();
+			$('#about-container').show();
+		},
 		renderGame: function(){
 			$('#instructions-container').hide();
+			$('#about-container').hide();
 			$('#game-display').show();
 			$('#secrets-box').empty();
 			$('#grass-flowers-container').empty();
