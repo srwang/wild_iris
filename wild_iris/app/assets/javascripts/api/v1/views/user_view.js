@@ -9,6 +9,21 @@ $(document).ready(function(){
 			this.$el.html(this.template({user: this.model.toJSON()}));
 			return this
 		},
+		checkRain: function(){
+			var that = this
+			$.get("http://ipinfo.io/", function(response) {
+			    console.log(response.city, response.region);
+
+			    $.get('http://api.wunderground.com/api/4b6e233436935f0e/conditions/q/' + response.region + '/' + response.city + '.json', function(response){
+			    	var weather = response.current_observation.weather
+
+			    	if (/Rain/.test(weather)) {
+			    		alert("It's raining where you are! You begin with 5000 rainwater points.")
+			    		that.model.save({rainwater: 5000})
+			    	} 
+			    })
+			}, "jsonp");
+		},
 		addWater: function(){
 			console.log('clicked')
 			var newDropQuantity = this.model.attributes.rainwater + 15;
@@ -32,10 +47,11 @@ $(document).ready(function(){
 			this.$el.html('');
 
 			this.collection.each(function(user){
-				if (user.id === gon.user_id) {
+				if (user.id === parseInt(readCookie("user_id"))) {
 					var userView = new App.Views.UserView({model: user});
 
 					this.$el.append(userView.render().$el);
+					userView.checkRain();
 					if (user.attributes.level > 1) {
 						userView.addLevelTwo();
 					} 
@@ -57,20 +73,6 @@ $(document).ready(function(){
 		render: function(){
 			this.$el.html(this.template({user: this.model.toJSON()}));
 			return this
-		},
-		checkRain: function(){
-			// $.get("http://ipinfo.io/", function(response) {
-			//     console.log(response.city, response.region);
-
-			//     $.get('http://api.wunderground.com/api/4b6e233436935f0e/conditions/q/' + response.region + '/' + response.city + '.json', function(response){
-			//     	var weather = response.current_observation.weather
-
-			//     	if (/Rain/.test(weather)) {
-			//     		alert("It's raining where you are! You begin with 5000 rainwater points.")
-			//     		this.model.save({rainwater: 5000})
-			//     	} 
-			//     })
-			// }, "jsonp");
 		},
 		startNewGame: function(){
 			console.log('clicked')
@@ -148,10 +150,9 @@ $(document).ready(function(){
 			this.$el.html('');
 
 			this.collection.each(function(user){
-				if (user.id === gon.user_id){
+				if (user.id === parseInt(parseInt(readCookie("user_id")))){
 					var instructionView = new App.Views.InstructionView({model: user});
 					this.$el.append(instructionView.render().$el);
-					instructionView.checkRain();
 				}
 			}.bind(this))
 		}
@@ -160,6 +161,17 @@ $(document).ready(function(){
 	var users = new App.Collections.Users();
 	var usersView = new App.Views.UsersView({collection: users});
 	var instructionsView = new App.Views.InstructionsView({collection: users});
+
+	function readCookie(name) {
+	    var nameEQ = name + "=";
+	    var ca = document.cookie.split(';');
+	    for(var i=0;i < ca.length;i++) {
+	        var c = ca[i];
+	        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+	        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	    }
+	    return null;
+	}
 
 	
 })

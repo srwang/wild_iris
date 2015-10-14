@@ -15,10 +15,28 @@ $(document).ready(function(){
 			this.$el.html(this.template({flower: this.model.toJSON()}));	
 			return this
 		},
-		openSecretButtons: function(){
-			if (this.model.attributes.secret_unlocked === false) {
-				this.$('.secrets-game-button').show();
-			}
+		openSecretButtons: function(){ //opens secret game modal
+			var allFlowers = new App.Models.Flower({"byuser": "byuser/" + parseInt(readCookie("user_id"))});
+			allFlowers.getByProperty("byuser");
+			var that = this;
+			allFlowers.fetch({
+				success: function(model){
+					var allUnlocked = true;
+
+					for (i=0; i<=11; i++){
+						if (model.attributes[i].unlocked === false){
+							allUnlocked = false;
+						}
+					}
+					console.log(allUnlocked)
+					if (allUnlocked === true){
+						document.cookie="allUnlocked=true";
+						if (that.model.attributes.secret_unlocked === false) {
+							that.$('.secrets-game-button').show();
+						}
+					}
+				}
+			})
 		},
 		read: function(){
 			this.$('.poem-modal').toggle();
@@ -28,7 +46,7 @@ $(document).ready(function(){
 			this.$('.poem-modal').toggle();
 			this.$('.modal-overlay').toggle();
 		},
-		decreaseHunger: function(){
+		decreaseHunger: function(){ //calculates game play per click
 			var user = new App.Models.User({id: this.model.attributes.user_id})
 			var that = this
 			user.fetch({
@@ -66,30 +84,7 @@ $(document).ready(function(){
 						that.openSecretsModal();
 					} 
 
-					function calcWin(){
-						var allFlowers = new App.Models.Flower({"byuser": "byuser/" + that.model.attributes.user_id});
-						allFlowers.getByProperty("byuser");
-						allFlowers.fetch({
-							success: function(model){
-								var allUnlocked = 0;
-
-								for (i=0; i<=11; i++){
-									if (model.attributes[i].unlocked === true){
-										allUnlocked++;
-									}
-								}
-								console.log(allUnlocked)
-								console.log(level)
-								if (level === 6 && allUnlocked >= 11){
-									document.cookie="allUnlocked=true";
-									that.model.collection.trigger('change');
-									alert('Congrats, you have unlocked all of the flowers! You have the chance to go back and unlock all of their secrets.')
-								}
-							}
-						})
-					}
-
-					function calcWaterDrops (){
+					function calcWaterDrops (){ //calculate rainwater/hunger post click
 						if (res.attributes.rainwater>=25) {
 							var newHunger = that.model.attributes.fed_cap - 25;
 							that.model.save({fed_cap: newHunger});
@@ -106,15 +101,14 @@ $(document).ready(function(){
 						}
 					}
 
-					function unlockFlower (){
+					function unlockFlower (){ //unlock flower to switch click from playgame to readpoem
 						that.model.set({unlocked: true});
 						that.model.save();
 						res.set({level: res.attributes.level + 1})
 						res.save();
-						calcWin();
 					}
 
-					function wormAttack (){
+					function wormAttack (){ //changes page to HTML canvas animation
 						that.model.save({alive: false});
 
 						$('#game-display').hide();
@@ -122,10 +116,9 @@ $(document).ready(function(){
 							'<div class="pure-u-21-24" id="worm-game-container">'+
 							'<img id="flower" src="/assets/flowerswhite.jpg" style="display: none">' +
 							'<canvas id="topLayer"></canvas>' +
-							'<h3>Alas, your flower was attacked by a malicious worm. To bring it back to good health, you must collect celestial energy. Click on a glowing orb before it flickers out, and drag it to the moon for safekeeping. Ten orbs will save your flower!</h3>' +
+							'<h3>Alas, your flower was attacked by a malicious worm. To bring it back to good health, you must collect celestial energy. Click on a glowing orb before it flickers out, and drag it to the moon for safekeeping. Five orbs will save your flower!</h3>' +
 							'<h3>Hint: The longer you wait, the faster the orbs will move.</h3>' +
 							'<img id="dark-tree" src="/assets/tree.png" style="display: none">' +
-							'<img id="night-sky" src="/assets/background.bmp" style="display: none">' +
 						'</div>'+
 						'</div>')
 
@@ -185,17 +178,19 @@ $(document).ready(function(){
 								ctx.fillStyle = "rgba(0, 34, 69, 0.4)";
 								ctx.fillRect(0,0, canvas.width, canvas.height);
 
-								var nightSky = document.getElementById('night-sky');
-								ctx.drawImage(nightSky, 0, 0)
+								// var nightSky = document.getElementById('night-sky');
+								// ctx.drawImage(nightSky, 0, 0)
 
-								// var tree = document.getElementById('dark-tree');
-								// ctx.drawImage(tree, -100, -100)
+								var tree = document.getElementById('dark-tree');
+								ctx.drawImage(tree, -100, -100)
 
-								// var flower = document.getElementById('flower');
-								// ctx.drawImage(flower, posX, posY);
-								// ctx.drawImage(flower, posX + 300, posY);
-								// ctx.drawImage(flower, posX + 600, posY);
-								// ctx.drawImage(flower, posX + 900, posY);
+								var flower = document.getElementById('flower');
+								ctx.drawImage(flower, posX, posY);
+								ctx.drawImage(flower, posX + 300, posY);
+								ctx.drawImage(flower, posX + 600, posY);
+								ctx.drawImage(flower, posX + 900, posY);
+								ctx.drawImage(flower, posX + 1200, posY);
+								ctx.drawImage(flower, posX + 1500, posY);
 
 								for(var i=0; i<particleNum; i++){
 								  var particle = new Particle();
@@ -277,7 +272,7 @@ $(document).ready(function(){
 
 						}, false);
 
-						function countDraggedParticles () {
+						function countDraggedParticles () { //calculating win
 							draggedParticles.forEach(function(element){
 								if (element.x > canvas.width - 145 + canvasLeft && element.x < canvas.width - 55 + canvasLeft && element.y > 50 + canvasTop && element.y < 140 + canvasTop) {
 
@@ -298,7 +293,7 @@ $(document).ready(function(){
 									var newParticle = new inPlaceParticle();
 									inPlaceParticles.push(newParticle);
 
-									if (inPlaceParticles.length === 1) {
+									if (inPlaceParticles.length === 5) {
 									  alert('Congratulations, you have saved the life of your flower!')
 									  $('#worm-game-container').remove();
 									  $('#game-display').show();
@@ -311,7 +306,7 @@ $(document).ready(function(){
 				}
 			});
 		},
-		openSecretsModal: function(){
+		openSecretsModal: function(){ //generate secrets game and svgs dynamically
 			var flowers = ["Wild Iris", "Red Poppy", "Lamium", "Snowdrops", "The White Rose", "Violets", "Trillium", "Spring Snow", "Witchgrass"]
 			var flowerColors = ["red", "rgba(241, 241, 34, 0.66)", "blue", "purple", "#F1DADA", "rgba(212, 131, 212, 0.82)", "rgba(18, 88, 156, 0.82)", "pink", "yellow", "lightblue"]
 			var flowerCenters = ["black", "yellow", "purple", "pink", "lightblue", "white", "red", "gray", "purple"]
@@ -386,7 +381,7 @@ $(document).ready(function(){
 			this.$('.secrets-game-modal').toggle();
 			this.$('.secrets-modal-overlay').toggle();
 		},
-		closeSecretsModal: function(){
+		closeSecretsModal: function(){ //allows users to opt out of returning to secrets game, calculates outstanding hunger points
 			this.$('.secrets-game-modal').toggle();
 			this.$('.secrets-modal-overlay').toggle();
 
@@ -398,7 +393,7 @@ $(document).ready(function(){
 			newHunger = this.model.attributes.fed_cap + moreHunger
 			this.model.save({fed_cap: newHunger})
 		},
-		calcSecretStrength: function(){
+		calcSecretStrength: function(){ //randomly chooses if flower "likes" secret
 			var result = Math.floor(Math.random()*2)
 			if (result !== 1) {
 				alert('sorry ' + this.model.attributes.name + ' doesn\'t like that secret :(')
@@ -414,7 +409,7 @@ $(document).ready(function(){
 		}
 	})
 
-	App.Views.PurgatoryFlowersView = Backbone.View.extend({
+	App.Views.PurgatoryFlowersView = Backbone.View.extend({ //creating view for aboveground flowers
 		el: '#grass-flowers-container',
 		initialize: function(){
 			this.collection.fetch();
@@ -423,22 +418,18 @@ $(document).ready(function(){
 		render: function(){
 			this.$el.html('');
 
-			var allUnlocked = readCookie('allUnlocked');
-
 			this.collection.each(function(flower){
-				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "purgatory" && flower.attributes.user_id === gon.user_id) {
+				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "purgatory" && flower.attributes.user_id === parseInt(readCookie("user_id"))) {
 
 					var flowerView = new App.Views.FlowerView({model: flower});
-					this.$el.append(flowerView.render().$el);	
-					if (allUnlocked === "true"){					
-						flowerView.openSecretButtons();
-					}
+					this.$el.append(flowerView.render().$el);					
+					flowerView.openSecretButtons();
 				}
 			}.bind(this))				
 		}
 	})
 
-	App.Views.HellFlowersView = Backbone.View.extend({
+	App.Views.HellFlowersView = Backbone.View.extend({ //creating view for belowground flowers
 		el: '#dirt-flowers-container',
 		initialize: function(){
 			this.collection.fetch();
@@ -447,22 +438,18 @@ $(document).ready(function(){
 		render: function(){
 			this.$el.html('');
 
-			var allUnlocked = readCookie('allUnlocked');
-
 			this.collection.each(function(flower){
-				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "hell" && flower.attributes.user_id === gon.user_id) {
+				if (flower.attributes.poem_type === "flower" && flower.attributes.location === "hell" && flower.attributes.user_id === parseInt(readCookie("user_id"))) {
 
 					var flowerView = new App.Views.FlowerView({model: flower});
-					this.$el.append(flowerView.render().$el);		
-					if (allUnlocked === "true"){		
-						flowerView.openSecretButtons();
-					}				
+					this.$el.append(flowerView.render().$el);				
+					flowerView.openSecretButtons();			
 				}
 			}.bind(this))
 		}
 	})
 
-	App.Views.SecretsBoxView = Backbone.View.extend({
+	App.Views.SecretsBoxView = Backbone.View.extend({ //collected secrets show in box
 		template: Handlebars.compile($('#secrets-box-template').html()),
 		events: {
 			'click .secrets-icon': 'openSecret',
@@ -492,14 +479,14 @@ $(document).ready(function(){
 			this.$el.html('');
 
 			this.collection.each(function(flower){
-				if (flower.attributes.poem_type === "flower" && flower.attributes.secret_unlocked === true && flower.attributes.user_id === gon.user_id) {
+				if (flower.attributes.poem_type === "flower" && flower.attributes.secret_unlocked === true && flower.attributes.user_id === parseInt(readCookie("user_id"))) {
 					this.$el.append(new App.Views.SecretsBoxView({model: flower}).render().$el);					
 				}
 			}.bind(this))
 		}
 	})
 
-	App.Views.ExtraPoemView = Backbone.View.extend({
+	App.Views.ExtraPoemView = Backbone.View.extend({ //hidden poems unlocked when game is won
 		template: Handlebars.compile($('#garden-poems-template').html()),
 		events: {
 			'click .read-button': 'read',
@@ -529,14 +516,14 @@ $(document).ready(function(){
 			this.$el.html('');
 
 			this.collection.each(function(flower){
-				if (flower.attributes.poem_type === "landscape" && flower.attributes.user_id === gon.user_id){
+				if (flower.attributes.poem_type === "landscape" && flower.attributes.user_id === parseInt(readCookie("user_id"))){
 					this.$el.append(new App.Views.ExtraPoemView({model: flower}).render().$el);	
 				}
 			}.bind(this))
 		}
 	})
 
-	App.Routers.FlowerRouter = Backbone.Router.extend({
+	App.Routers.FlowerRouter = Backbone.Router.extend({ //routes
 		routes: {
 			"": "redirectToInstructions",
 			"instructions": "renderInstructions",
@@ -578,14 +565,14 @@ $(document).ready(function(){
 	Backbone.history.start();
 
 	function readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
-}
+	    var nameEQ = name + "=";
+	    var ca = document.cookie.split(';');
+	    for(var i=0;i < ca.length;i++) {
+	        var c = ca[i];
+	        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+	        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	    }
+	    return null;
+	}
 
 })

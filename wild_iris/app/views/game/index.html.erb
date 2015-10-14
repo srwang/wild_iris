@@ -2,8 +2,7 @@
 <html>
 <head>
 	<title>Wild Iris Game</title>
-	<link href='http://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
-	<%= include_gon(:init => true) %>
+	<link href='//fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
 </head>
 <body>
 	<header>
@@ -24,6 +23,7 @@
 	<div id="instructions-container">
 	</div>	
 
+<!-- instructions route -->
 	<script type="text/x-handlebars-template" id="instructions-template">
 		<h1>Instructions</h1>
 		<ol>
@@ -37,16 +37,18 @@
 		<button id="new-game-button">START A NEW GAME</button>
 	</script>
 
+<!-- about route -->
 	<div class="pure-g">
 		<div class="pure-u-2-3" id="about-container">
-			<h3>The Wild Iris game was inspired by Louise Glück's poetry collection <a href="http://www.amazon.com/Wild-Iris-Louise-Gluck/dp/0880013346/ref=sr_1_1?ie=UTF8&qid=1444183509&sr=8-1&keywords=the+wild+iris" onclick="window.open(this.href); return false;" onkeypress="window.open(this.href); return false;">The Wild Iris</a>, in which many of the poems are from the perspectives of flowers. Reading the book has always felt like taking a deep dive into a world of other-wordly yet ultra-earthly voices, and I tried to recreate that experience in an interactive, digital form. I hope you enjoy exploring the "garden"!</h3>
+			<h3>The Wild Iris game was inspired by Louise Glück's poetry collection <a href="http://www.amazon.com/Wild-Iris-Louise-Gluck/dp/0880013346/ref=sr_1_1?ie=UTF8&qid=1444183509&sr=8-1&keywords=the+wild+iris" onclick="window.open(this.href); return false;" onkeypress="window.open(this.href); return false;">The Wild Iris</a>, in which many of the poems are from the perspectives of flowers. Reading the book has always felt like taking a deep dive. I tried to recreate digitially the experience of suddenly being immersed in a strange garden, filled with otherwordly (yet ultra-earthly, ultra-human) voices.</h3>
 		</div>
 	</div>
 
+<!-- main -->
 	<div id="game-display">
-<!-- 		<div class="clearfix" id="music-box">
-			<iframe width="300px" height="50px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/28344808&amp;auto_play=true&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe><br>
-		</div> -->
+		<div class="clearfix" id="music-box">
+			<iframe width="300px" height="100px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/28344808&amp;auto_play=true&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe><br>
+		</div>
 
 		<div id="secrets-box-container">
 			<h2>Collected Secrets</h2>
@@ -57,12 +59,12 @@
 		<div id='rainwater-container'>
 		</div>
 
-		<div class="clearfix" id="grass-flowers-container">
 	<!-- 		generate flower cards to be displayed on "grass" -->
+		<div class="clearfix" id="grass-flowers-container">
 		</div>
 
-		<div class="clearfix" id="dirt-flowers-container">
 	<!-- 		generate flower cards to be displayed "underground" -->
+		<div class="clearfix" id="dirt-flowers-container">
 		</div>
 
 		<div class="clearfix" id="earth-box">
@@ -82,6 +84,7 @@
 			</div>
 		</script>
 
+<!-- template for each flower box and secrets modal -->
 		<script type="text/x-handlebars-template" id="flower-template">
 			<div class="flower-container clearfix" id="flower-{{flower.id}}">
 				<div class="main-content">
@@ -149,7 +152,7 @@
 		</script>
 
 		<script type="text/x-handlebars-template" id="garden-poems-template">
-			<div class="hidden-item-container" id='hidden-{{flower.id}}'>
+			<div class="hidden-item-container" id='{{flower.linked_name}}'>
 				<div class="hidden-img-container read-button" style="background-image: url('{{flower.image}}')">
 				</div>
 				<h4>{{flower.name}}</h4>
